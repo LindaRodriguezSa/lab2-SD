@@ -5,3 +5,15 @@
 body {
     text-align: center;
 }
+
+.image {
+    cursor: pointer;
+    height: 500px;
+    margin: 2px;
+    transition: filter 0.3s ease-in;
+    width: 500px;
+}
+
+.image:hover {
+    filter: brightness(1.2);
+}

@@ -1,6 +1,3 @@
-const slider = document.querySelector('.main-img');
-
-let images = ['img.jpg', 'img.jpg'];
 let index = 0;
 
 let quoteData = {
@@ -28,9 +25,7 @@ var buttonsa = new Vue({
 			changeQuote();
 		},
 		instancia: () => {
-			console.log('Nuea');
 			createInstance();
-			console.log(images.length);
 		},
 		email: () => {
 			sendEmail();
@@ -45,8 +40,10 @@ function changeQuote() {
 }
 
 function createInstance() {
-	images.push('https://skyprep.com/wp-content/uploads/2013/07/Alfred_Quotes1.jpg');
-	// quoteData.quote = changeQuote();
+	imagecomponent.images.push({
+		index: imagecomponent.images.length + 1,
+		src: 'https://i.picsum.photos/id/430/536/354.jpg?hmac=uxrNCXgJuycp2JMZ9jpZb5ThTsZIplRTSPuc4ybMyws',
+	});
 }
 
 function sendEmail() {
@@ -54,25 +51,38 @@ function sendEmail() {
 	alert('Email enviado');
 }
 
-var arrowButtons = new Vue({
-	el: '#arrow-buttons',
+var imagecomponent = new Vue({
+	el: '#image-change',
+	data() {
+		return {
+			index: 0,
+			image: null,
+			images: [
+				{
+					id: 1,
+					src: 'https://blog.hubspot.com/hubfs/famous-quotes.jpg',
+					alt: 'Natural Grove Green Trees Path',
+				},
+				{
+					id: 2,
+					src: 'https://www.planetware.com/wpimages/2019/09/top-places-to-visit-in-the-world-machu-picchu-peru.jpg',
+					alt: 'stockafbeelding cascades in nationaal park plitvice',
+				},
+				{
+					id: 3,
+					src: 'https://cdn.tinybuddha.com/wp-content/uploads/2018/09/Woman-on-a-bench.png',
+					alt: 'natural view of waterfall',
+				},
+			],
+		};
+	},
+	mounted() {
+		this.switchImage();
+	},
 	methods: {
-		right: () => {
-			nextPicture();
-		},
-		left: () => {
-			previousePicture();
+		switchImage() {
+			this.image = this.images[this.index];
+			this.index = (this.index + 1) % this.images.length;
 		},
 	},
 });
-
-function nextPicture() {
-	index = index + 1 >= images.length ? 0 : index + 1;
-	slider.src = images[index];
-}
-
-function previousePicture() {
-	index = index - 1 < 0 ? images.length - 1 : index - 1;
-	slider.alt = 'Nada de nada';
-	slider.src = images[index];
-}
