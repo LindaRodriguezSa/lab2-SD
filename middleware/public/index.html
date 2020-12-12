@@ -9,12 +9,13 @@
 </head>
 
 <body>
-    <div id="image-change">
-        <img v-if="image" @click="switchImage" class="image" :src="image.src" alt="Una imagen :D">
+    <div class="content">
+        <div id="image-change">
+            <img v-if="image" @click="switchImage" class="image" :src="image.src" alt="Una imagen :D">
+        </div>
+        <blockquote id="quote">{{ quote }}</blockquote>
+        <h3 id="servernum">Servidor # : {{ server }}</h3>
     </div>
-    <blockquote id="quote">{{ quote }}</blockquote>
-    <h3 id="servernum">Servidor # : {{ server }}</h3>
-
     <div id="buttons">
         <button class="btn_frase" v-on:click="frase">Cambiar Frase</button>
         <button class="btn_instancia" v-on:click="instancia">Nueva Instancia</button>
