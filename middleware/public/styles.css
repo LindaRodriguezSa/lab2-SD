@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Trispace:wght@500&display=swap');
+.arrow-imgs {
+    width: 100px;
+}
+
 body {
     background-color: #121212;
     /*background: #323c41;*/
@@ -72,4 +76,16 @@ body {
     position: relative;
     top: -60px;
     color: white;
+}
+
+.image {
+    cursor: pointer;
+    height: 500px;
+    margin: 2px;
+    transition: filter 0.3s ease-in;
+    width: 500px;
+}
+
+.image:hover {
+    filter: brightness(1.2);
 }

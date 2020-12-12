@@ -9,7 +9,9 @@
 </head>
 
 <body>
-    <img src="img.jpg" alt="Imagen con frase" />
+    <div id="image-change">
+        <img v-if="image" @click="switchImage" class="image" :src="image.src" alt="Una imagen :D">
+    </div>
     <blockquote id="quote">{{ quote }}</blockquote>
     <h3 id="servernum">Servidor # : {{ server }}</h3>
 
