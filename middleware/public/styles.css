@@ -6,7 +6,7 @@
     margin-left: auto;
     margin-right: auto;
     border-radius: 10px;
-    border: 2px solid #008CBA;
+    border: 2px solid #164958;
     padding: 20px 20px 0px 20px;
     height: auto;
 }
@@ -20,13 +20,7 @@ body {
 }
 
 .btn_frase {
-    text-decoration: none;
-    padding: 5px;
-    font-weight: 100;
-    font-family: 'Trispace', sans-serif;
-    font-size: 16px;
-    color: black;
-    /*background-color: #008CBA;*/
+    background-color: #008CBA;
     border-radius: 6px;
     border: 2px solid #008CBA;
 }
@@ -36,12 +30,15 @@ body {
     color: white;
 }
 
-.btn_instancia {
+.btn_frase, .btn_instancia {
     text-decoration: none;
     padding: 5px;
     font-weight: 100;
     font-size: 16px;
     color: black;
+}
+
+.btn_instancia {
     background-color: #00ba19;
     border-radius: 6px;
     border: 2px solid #00cc44;
@@ -108,4 +105,8 @@ body {
 
 .image:hover {
     filter: brightness(1.2);
+}
+
+#buttons {
+    margin-top: 10px;
 }
