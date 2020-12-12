@@ -1,31 +1,42 @@
-var quote = new Vue({
+let quoteData = {
+	quote: 'Solo sé que nada sé',
+};
+
+let serverData = {
+	server: 'Servidor 1',
+};
+
+var compQuote = new Vue({
 	el: '#quote',
-	data: {
-		quote: 'Solo que nada sé',
-	},
+	data: quoteData,
 });
 
 var servernum = new Vue({
 	el: '#servernum',
-	data: {
-		server: 'Servidor 1',
-	},
+	data: serverData,
 });
 
 var buttonsa = new Vue({
 	el: '#buttons',
 	methods: {
 		frase: () => {
-			quote.data = {
-				quote: 'Nueva frase',
-			};
-			console.log('Aca llamamos el servicio de node para cambiar la frase');
+			changeQuote();
 		},
 		instancia: () => {
-			console.log('/instancia');
+			createInstance();
 		},
 		email: () => {
 			console.log('/email');
 		},
 	},
 });
+
+function changeQuote() {
+	fetch('/getquote')
+		.then((response) => response.text())
+		.then((info) => (quoteData.quote = info));
+}
+
+function createInstance() {
+	quoteData.quote = changeQuote();
+}

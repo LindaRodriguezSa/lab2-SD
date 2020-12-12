@@ -23,6 +23,7 @@ app.get('/', (req, res) => {
 	//Metodo que se encarga de leer el archivo donde se guarda
 	getInfo();
 });
+
 //Info para enviar el correo
 app.get('/email', (req, res) => {
 	var transporter = nodemailer.createTransport({
@@ -47,6 +48,10 @@ app.get('/email', (req, res) => {
 			res.send('Email sent: ' + info.response);
 		}
 	});
+});
+
+app.get('/getquote', (req, res) => {
+	res.send('Para trabajar basta estar convencido de una cosa: que trabajar es menos aburrido que divertirse');
 });
 
 app.listen(port, () => {
