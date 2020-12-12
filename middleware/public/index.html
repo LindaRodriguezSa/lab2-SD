@@ -9,7 +9,16 @@
 </head>
 
 <body>
-    <img src="img.jpg" alt="Imagen con frase" />
+    <div id="arrow-buttons">
+        <button v-on:click="left"><img src="https://cdn1.iconfinder.com/data/icons/general-9/500/left_arrow-512.png"
+                alt="A black arrow with white background, for changing the current image to the past one"
+                class="arrow-imgs"></button>
+        <img class="main-img" src="img.jpg" alt="Imagen con frase" />
+        <button class="arrow-buttons" v-on:click="right"><img
+                src="https://cdn1.iconfinder.com/data/icons/general-9/500/right_arrow-512.png"
+                alt="A black arrow with white background, for changing the current image to the next"
+                class="arrow-imgs"></button>
+    </div>
     <blockquote id="quote">{{ quote }}</blockquote>
     <h3 id="servernum">Servidor # : {{ server }}</h3>
 
