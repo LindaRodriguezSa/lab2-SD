@@ -80,6 +80,10 @@ body {
     width: 30px;
 }
 
+#file-input {
+    display: none;
+}
+
 #quote {
     background: rgba(255, 255, 255, 0.1);
     font-size: 23px;
