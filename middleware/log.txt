@@ -1,0 +1,4 @@
+"debianServer" {2bf155d2-a156-4fc6-9aab-e5eaa55f8a17}
+"debian Cloud" {c2ec47ba-c5db-4c90-abf4-0d0475c88ef3}
+"debian Server2" {9f02c1b1-5e99-4eac-82f7-ac24701b1a5a}
+"debianA" {e5c1a717-6009-4f06-97ed-1473d21292ab}

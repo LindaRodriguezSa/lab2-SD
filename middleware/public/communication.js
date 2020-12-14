@@ -1,11 +1,13 @@
 let index = 0;
+let servidores;
 
 let quoteData = {
   quote: "Solo sé que nada sé",
 };
 
+
 let serverData = {
-  server: "Servidor 1",
+  server: "",
 };
 
 var compQuote = new Vue({
@@ -34,12 +36,16 @@ var buttonsa = new Vue({
 });
 
 function changeQuote() {
-  fetch("/getquote")
+    fetch("http://192.168.0.11:3000/getQuote")
     .then((response) => response.text())
     .then((info) => (quoteData.quote = info));
+  fetch("/getServer")
+    .then((response) => response.text())
+    .then((info) => (serverData.server = info));
 }
 
 function createInstance() {
+  fetch("/getInstance")
   imagecomponent.images.push({
     index: imagecomponent.images.length + 1,
     src:
@@ -49,7 +55,7 @@ function createInstance() {
 
 function sendEmail() {
   fetch("/email");
-  alert("Email enviado");
+  alert("email enviado")
 }
 
 var imagecomponent = new Vue({

@@ -1,27 +1,49 @@
 const express = require("express");
 const app = express();
-const port = 2000;
+const port = 7000;
 const nodemailer = require("nodemailer");
-const readLastLines = require("read-last-lines");
-
-//se debe primero ejecutar el bash llamado prueba.sh
-//ya que el otro muestra la informacion e instala la copia del server
+var fs = require('fs');
+const exec = require('child_process').exec;
 
 app.use(express.static("./public"));
 
+var contadorServer=0;
 function getInfo() {
-  readLastLines.read("log.txt", 100).then((lines) => {
-    let data = lines.split("\n");
-    for (var i = 0; i < data.length; i++) {
-      console.log(data[i]); //lista Servidores
+  let data;
+  var valor;
+  var asd="";
+  var dato="";
+  var fin=false;
+  var info = fs.readFileSync("log.txt").toString();
+  data=info.split("}");
+  valor = data.length;
+  for (var i = 0; i < valor; i++) {
+    if(i==contadorServer){
+      asd=(contadorServer)+"";
+      contadorServer++;
+      break;
+    }else if(contadorServer>=valor){
+      asd = "NO se puede porque todos los servidores estan ocupados";
+      fin = true;
     }
-  });
+ }
+ if(fin){
+   contadorServer=0;
+ }
+  return asd;
 }
+
+
+app.get("/getServer", (req, res) => {
+  var info = getInfo();
+  res.send(
+    info
+  ); 
+});
 
 app.get("/", (req, res) => {
   res.send("Servidor 1");
   //Metodo que se encarga de leer el archivo donde se guarda
-  getInfo();
 });
 
 //Info para enviar el correo
@@ -47,6 +69,15 @@ app.get("/email", (req, res) => {
       res.send("Error");
     } else {
       res.send("Email sent: " + info.response);
+    }
+  });
+});
+
+app.get("/getInstance",(req,res)=>{
+  exec('bash prueba.sh', (err, stdout, stderr) => {
+    if (err) {
+      console.error(`exec error: ${err}`);
+      return;
     }
   });
 });
