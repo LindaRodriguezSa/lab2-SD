@@ -66,6 +66,7 @@ function createInstance() {
 function sendEmail() {
   fetch("/email");
   alert("email enviado");
+  console.log("nddkd");
 }
 
 var imagecomponent = new Vue({
