@@ -14,7 +14,7 @@
 
         <div id="image-change" class="carousel center-align">
             <div v-for="image in images">
-                <div class="carousel-item">
+                <div class="carousel-item" :data-id="image.id">
                     <img class="image" :src="image.src" alt="">
                     <blockquote id="quote">{{ quote }}</blockquote>
                 </div>
@@ -26,7 +26,7 @@
 
     <div>
         <label for="inputNombre">Nombre</label>
-        <input type="text" id="image-url" maxlength="19" autocomplete="off"
+        <input type="url" id="image-url"
             placeholder="https://www.visme.co/wp-content/uploads/2019/11/Music-Quote-Poster-.jpg">
     </div>
     <div id="buttons">
