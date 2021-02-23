@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const app = express();
 const port = 2000;
 const nodemailer = require("nodemailer");
@@ -9,7 +9,6 @@ const exec = require("child_process").exec;
 const { create } = require("hbs");
 var name = "";
 app.use(express.static("./public"));
-
 exec("bash creacionArchivos.sh", (err, stdout, stderr) => {
   if (err) {
     console.error(`exec error: ${err}`);
@@ -48,9 +47,9 @@ app.get("/getServer", (req, res) => {
   res.send(info);
 });
 
-app.get("/", (req, res) => {
-  res.send("Servidor 1");
-  //Metodo que se encarga de leer el archivo donde se guarda
+app.get('/', (req, res) => {
+	res.send('Servidor 1');
+	//Metodo que se encarga de leer el archivo donde se guarda
 });
 
 //Info para enviar el correo
@@ -63,22 +62,21 @@ app.get("/email", (req, res) => {
     },
   });
 
-  var mailOptions = {
-    from: "pruebasdistribuidos20@gmail.com",
-    to: "cris.2014971130@gmail.com",
-    subject: "Reporte Caida de Servidor",
-    text:
-      "El servidor X se ha caido. Si desea solucionar el error, ingrese a la aplicacion!",
-  };
+	var mailOptions = {
+		from: 'pruebasdistribuidos20@gmail.com',
+		to: 'cris.2014971130@gmail.com',
+		subject: 'Reporte Caida de Servidor',
+		text: 'El servidor X se ha caido. Si desea solucionar el error, ingrese a la aplicacion!',
+	};
 
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-      res.send("Error");
-    } else {
-      res.send("Email sent: " + info.response);
-    }
-  });
+	transporter.sendMail(mailOptions, function (error, info) {
+		if (error) {
+			console.log(error);
+			res.send('Error');
+		} else {
+			res.send('Email sent: ' + info.response);
+		}
+	});
 });
 "log.txt"
 function createFile(nameAux) {
@@ -132,7 +130,9 @@ lector.on("line", linea => {
   contador==0;
 });
 
-
+/**
+ * Realiza una petición @get a el servidor correspondiente, dado por balanceo de carga
+ */
 app.get("/getquote", (req, res) => {
   res.send(
     "Para trabajar basta estar convencido de una cosa: que trabajar es menos aburrido que divertirse"
@@ -149,4 +149,12 @@ function iniciar(){
 
 app.listen(port, () => {  
   console.log(`Server One, listening at port: ${port}`);
+=======
+app.get('/getInstance', (req, res) => {
+	exec('bash prueba.sh', (err, stdout, stderr) => {
+		if (err) {
+			console.error(`exec error: ${err}`);
+			return;
+		}
+	});
 });

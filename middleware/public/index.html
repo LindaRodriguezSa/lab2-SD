@@ -14,7 +14,7 @@
 
         <div id="image-change" class="carousel center-align">
             <div v-for="image in images">
-                <div class="carousel-item">
+                <div class="carousel-item" :data-id="image.id">
                     <img class="image" :src="image.src" alt="">
                     <blockquote id="quote">{{ quote }}</blockquote>
                 </div>
@@ -30,8 +30,6 @@
             placeholder="https://www.visme.co/wp-content/uploads/2019/11/Music-Quote-Poster-.jpg">
     </div>
     <div id="buttons">
-
-
         <button class="btn_frase" v-on:click="frase">Cambiar imagen</button>
         <button class="btn_instancia" v-on:click="instancia">Nueva Instancia</button>
         <button class="btn_email" v-on:click="email">Notificar Falla</button>
