@@ -6,7 +6,7 @@ let quoteData = {
 };
 
 let serverData = {
-	server: 0,
+  server: "2",
 };
 
 var compQuote = new Vue({
@@ -64,17 +64,18 @@ function changeQuote() {
 }
 
 function createInstance() {
-	fetch('/getInstance');
-	imagecomponent.images.push({
-		index: imagecomponent.images.length + 1,
-		src: 'https://i.picsum.photos/id/430/536/354.jpg?hmac=uxrNCXgJuycp2JMZ9jpZb5ThTsZIplRTSPuc4ybMyws',
-	});
+  fetch("/getInstance");
+  imagecomponent.images.push({
+    index: imagecomponent.images.length + 1,
+    src:
+      "https://i.picsum.photos/id/430/536/354.jpg?hmac=uxrNCXgJuycp2JMZ9jpZb5ThTsZIplRTSPuc4ybMyws",
+  });
+  alert("Instancia creada");
 }
 
 function sendEmail() {
-	fetch('/email');
-	alert('email enviado');
-	console.log('nddkd');
+  fetch("/email");
+  console.log("nddkd");
 }
 
 var imagecomponent = new Vue({

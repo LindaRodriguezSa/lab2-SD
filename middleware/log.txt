@@ -1,4 +1,4 @@
-"debianServer" {2bf155d2-a156-4fc6-9aab-e5eaa55f8a17}
-"debian Cloud" {c2ec47ba-c5db-4c90-abf4-0d0475c88ef3}
-"debian Server2" {9f02c1b1-5e99-4eac-82f7-ac24701b1a5a}
-"debianA" {e5c1a717-6009-4f06-97ed-1473d21292ab}
+"Servidor1" {491a58c2-845b-475b-bc76-9fcf1576ed25}
+"Servidor2" {083c5b3b-d6d8-40d3-ada9-693bfc6a4504}
+"Servidor3" {e7f69f6b-bada-4d94-b81d-d8ec9e611df0}
+"Servidor4" {d9ad0c4d-0c2d-45aa-902e-06c3246699f6}
