@@ -3,21 +3,32 @@ const app = express();
 const port = 2000;
 const nodemailer = require("nodemailer");
 var fs = require("fs");
+const readline = require("readline");
+NOMBRE_ARCHIVO = "direcciones.txt";
 const exec = require("child_process").exec;
-
+const { create } = require("hbs");
+var name = "";
 app.use(express.static("./public"));
 
+exec("bash creacionArchivos.sh", (err, stdout, stderr) => {
+  if (err) {
+    console.error(`exec error: ${err}`);
+    return;
+  }else{
+    console.log("Archivo creado");
+    iniciar();
+  }
+});
+
 var contadorServer = 0;
+
 function getInfo() {
-  let data;
   var valor;
   var asd = "";
-  var dato = "";
   var fin = false;
-  var info = fs.readFileSync("log.txt").toString();
-  data = info.split("}");
-  valor = data.length;
-  for (var i = 0; i < valor; i++) {
+  valor = listaServidores.length;
+  name = valor;
+  for (var i = 0; i < listaServidores.length; i++) {
     if (i == contadorServer) {
       asd = contadorServer + "";
       contadorServer++;
@@ -34,7 +45,6 @@ function getInfo() {
 }
 
 app.get("/getServer", (req, res) => {
-  var info = getInfo();
   res.send(info);
 });
 
@@ -49,7 +59,7 @@ app.get("/email", (req, res) => {
     service: "gmail",
     auth: {
       user: "pruebasdistribuidos20@gmail.com",
-      pass: "9%mN*wSe", //aqui va la contraseña del correo
+      pass: "9%mN*wSe",
     },
   });
 
@@ -70,15 +80,58 @@ app.get("/email", (req, res) => {
     }
   });
 });
+"log.txt"
+function createFile(nameAux) {
+  fs.writeFile('creacionVM.sh', '#!/bin/bash\n\n'+
+  'VBoxManage clonevm ServidorOriginal --name="'+nameAux+'" --register --mode=all \--options=KeepNATMACs --options=keepdisknames --options=keephwuuids\n'+
+  'VBoxManage startvm "'+nameAux+'"\n'+
+  'rm direcciones.txt\n'+
+  'arp-scan --interface=wlp3s0 --localnet >>direcciones.txt'
+  , function (err) {
+    if (err) throw err;
+    console.log('File is created successfully.');
+  });
+}
 
 app.get("/getInstance", (req, res) => {
-  exec("bash prueba.sh", (err, stdout, stderr) => {
+  console.log("Creando...");
+  exec("bash creacionVM.sh", (err, stdout, stderr) => {
+    getInfo();
     if (err) {
       console.error(`exec error: ${err}`);
       return;
+    }else{
+      console.log("logrado Maquina creada");
+      showListaServer();
     }
   });
 });
+
+function showListaServer(){
+  console.log("lista de servidores");
+  for (let index = 0; index < listaServidores.length; index++) {
+    if(listaServidores[index]!=undefined){
+      console.log(listaServidores[index]);
+    }
+  }
+}
+
+var listaServidores = new Array(4);
+var lineaxD = "";
+var asd= "";
+var contador=0;
+let lector = readline.createInterface({
+  input: fs.createReadStream(NOMBRE_ARCHIVO)
+});
+lector.on("line", linea => {
+  if(linea.includes("08:00:27")){
+    asd = linea.slice(0, -41);
+    listaServidores[contador]=asd;
+    contador++;
+  }
+  contador==0;
+});
+
 
 app.get("/getquote", (req, res) => {
   res.send(
@@ -86,6 +139,14 @@ app.get("/getquote", (req, res) => {
   );
 });
 
-app.listen(port, () => {
+function iniciar(){
+  getInfo();
+  var nameAux = "Servidor"+name;
+  createFile(nameAux);
+  console.log(nameAux);
+  showListaServer();
+}
+
+app.listen(port, () => {  
   console.log(`Server One, listening at port: ${port}`);
 });

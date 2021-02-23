@@ -7,7 +7,7 @@ let quoteData = {
 };
 
 let serverData = {
-  server: " ",
+  server: "2",
 };
 
 var compQuote = new Vue({
@@ -61,11 +61,12 @@ function createInstance() {
     src:
       "https://i.picsum.photos/id/430/536/354.jpg?hmac=uxrNCXgJuycp2JMZ9jpZb5ThTsZIplRTSPuc4ybMyws",
   });
+  alert("Instancia creada");
 }
 
 function sendEmail() {
   fetch("/email");
-  alert("email enviado");
+  
   console.log("nddkd");
 }
 
