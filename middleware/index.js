@@ -78,7 +78,6 @@ app.get("/email", (req, res) => {
 		}
 	});
 });
-"log.txt"
 function createFile(nameAux) {
   fs.writeFile('creacionVM.sh', '#!/bin/bash\n\n'+
   'VBoxManage clonevm ServidorOriginal --name="'+nameAux+'" --register --mode=all \--options=KeepNATMACs --options=keepdisknames --options=keephwuuids\n'+
@@ -149,7 +148,8 @@ function iniciar(){
 
 app.listen(port, () => {  
   console.log(`Server One, listening at port: ${port}`);
-=======
+});
+
 app.get('/getInstance', (req, res) => {
 	exec('bash prueba.sh', (err, stdout, stderr) => {
 		if (err) {
