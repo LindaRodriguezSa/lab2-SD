@@ -1,50 +1,51 @@
 const express = require('express');
 const app = express();
 const port = 2000;
-const nodemailer = require("nodemailer");
-var fs = require("fs");
-const readline = require("readline");
-NOMBRE_ARCHIVO = "direcciones.txt";
-const exec = require("child_process").exec;
-const { create } = require("hbs");
-var name = "";
-app.use(express.static("./public"));
-exec("bash creacionArchivos.sh", (err, stdout, stderr) => {
-  if (err) {
-    console.error(`exec error: ${err}`);
-    return;
-  }else{
-    console.log("Archivo creado");
-    iniciar();
-  }
+const nodemailer = require('nodemailer');
+const fs = require('fs');
+const readline = require('readline');
+const axios = require('axios');
+NOMBRE_ARCHIVO = 'direcciones.txt';
+const exec = require('child_process').exec;
+const { create } = require('hbs');
+var name = '';
+app.use(express.static('./public'));
+exec('bash creacionArchivos.sh', (err, stdout, stderr) => {
+	if (err) {
+		console.error(`exec error: ${err}`);
+		return;
+	} else {
+		console.log('Archivo creado');
+		iniciar();
+	}
 });
 
 var contadorServer = 0;
 
 function getInfo() {
-  var valor;
-  var asd = "";
-  var fin = false;
-  valor = listaServidores.length;
-  name = valor;
-  for (var i = 0; i < listaServidores.length; i++) {
-    if (i == contadorServer) {
-      asd = contadorServer + "";
-      contadorServer++;
-      break;
-    } else if (contadorServer >= valor) {
-      asd = "NO se puede porque todos los servidores estan ocupados";
-      fin = true;
-    }
-  }
-  if (fin) {
-    contadorServer = 0;
-  }
-  return asd;
+	var valor;
+	var asd = '';
+	var fin = false;
+	valor = listaServidores.length;
+	name = valor;
+	for (var i = 0; i < listaServidores.length; i++) {
+		if (i == contadorServer) {
+			asd = contadorServer + '';
+			contadorServer++;
+			break;
+		} else if (contadorServer >= valor) {
+			asd = 'NO se puede porque todos los servidores estan ocupados';
+			fin = true;
+		}
+	}
+	if (fin) {
+		contadorServer = 0;
+	}
+	return asd;
 }
 
-app.get("/getServer", (req, res) => {
-  res.send(info);
+app.get('/getServer', (req, res) => {
+	res.send(info);
 });
 
 app.get('/', (req, res) => {
@@ -53,14 +54,14 @@ app.get('/', (req, res) => {
 });
 
 //Info para enviar el correo
-app.get("/email", (req, res) => {
-  var transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "pruebasdistribuidos20@gmail.com",
-      pass: "9%mN*wSe",
-    },
-  });
+app.get('/email', (req, res) => {
+	var transporter = nodemailer.createTransport({
+		service: 'gmail',
+		auth: {
+			user: 'pruebasdistribuidos20@gmail.com',
+			pass: '9%mN*wSe',
+		},
+	});
 
 	var mailOptions = {
 		from: 'pruebasdistribuidos20@gmail.com',
@@ -79,75 +80,85 @@ app.get("/email", (req, res) => {
 	});
 });
 function createFile(nameAux) {
-  fs.writeFile('creacionVM.sh', '#!/bin/bash\n\n'+
-  'VBoxManage clonevm ServidorOriginal --name="'+nameAux+'" --register --mode=all \--options=KeepNATMACs --options=keepdisknames --options=keephwuuids\n'+
-  'VBoxManage startvm "'+nameAux+'"\n'+
-  'rm direcciones.txt\n'+
-  'arp-scan --interface=wlp3s0 --localnet >>direcciones.txt'
-  , function (err) {
-    if (err) throw err;
-    console.log('File is created successfully.');
-  });
+	fs.writeFile(
+		'creacionVM.sh',
+		'#!/bin/bash\n\n' +
+			'VBoxManage clonevm ServidorOriginal --name="' +
+			nameAux +
+			'" --register --mode=all --options=KeepNATMACs --options=keepdisknames --options=keephwuuids\n' +
+			'VBoxManage startvm "' +
+			nameAux +
+			'"\n' +
+			'rm direcciones.txt\n' +
+			'arp-scan --interface=wlp3s0 --localnet >>direcciones.txt',
+		function (err) {
+			if (err) throw err;
+			console.log('File is created successfully.');
+		}
+	);
 }
 
-app.get("/getInstance", (req, res) => {
-  console.log("Creando...");
-  exec("bash creacionVM.sh", (err, stdout, stderr) => {
-    getInfo();
-    if (err) {
-      console.error(`exec error: ${err}`);
-      return;
-    }else{
-      console.log("logrado Maquina creada");
-      showListaServer();
-    }
-  });
+app.get('/getInstance', (req, res) => {
+	console.log('Creando...');
+	exec('bash creacionVM.sh', (err, stdout, stderr) => {
+		getInfo();
+		if (err) {
+			console.error(`exec error: ${err}`);
+			return;
+		} else {
+			console.log('logrado Maquina creada');
+			showListaServer();
+		}
+	});
 });
 
-function showListaServer(){
-  console.log("lista de servidores");
-  for (let index = 0; index < listaServidores.length; index++) {
-    if(listaServidores[index]!=undefined){
-      console.log(listaServidores[index]);
-    }
-  }
+function showListaServer() {
+	console.log('lista de servidores');
+	for (let index = 0; index < listaServidores.length; index++) {
+		if (listaServidores[index] != undefined) {
+			console.log(listaServidores[index]);
+		}
+	}
 }
 
 var listaServidores = new Array(4);
-var lineaxD = "";
-var asd= "";
-var contador=0;
+var lineaxD = '';
+var asd = '';
+var contador = 0;
 let lector = readline.createInterface({
-  input: fs.createReadStream(NOMBRE_ARCHIVO)
+	input: fs.createReadStream(NOMBRE_ARCHIVO),
 });
-lector.on("line", linea => {
-  if(linea.includes("08:00:27")){
-    asd = linea.slice(0, -41);
-    listaServidores[contador]=asd;
-    contador++;
-  }
-  contador==0;
+lector.on('line', (linea) => {
+	if (linea.includes('08:00:27')) {
+		asd = linea.slice(0, -41);
+		listaServidores[contador] = asd;
+		contador++;
+	}
+	contador == 0;
 });
 
 /**
  * Realiza una petición @get a el servidor correspondiente, dado por balanceo de carga
  */
-app.get("/getquote", (req, res) => {
-  res.send(
-    "Para trabajar basta estar convencido de una cosa: que trabajar es menos aburrido que divertirse"
-  );
+app.get('/getquote', (req, res) => {
+	// axios
+	// 	.get(`${ipservidorquecorresponda}/getQuote`)
+	// 	.then((response) => res.send(response))
+	// 	.catch((error) => console.log(error));
+
+	res.send('Para trabajar basta estar convencido de una cosa: que trabajar es menos aburrido que divertirse');
 });
 
-function iniciar(){
-  getInfo();
-  var nameAux = "Servidor"+name;
-  createFile(nameAux);
-  console.log(nameAux);
-  showListaServer();
+function iniciar() {
+	getInfo();
+	var nameAux = 'Servidor' + name;
+	createFile(nameAux);
+	console.log(nameAux);
+	showListaServer();
 }
 
-app.listen(port, () => {  
-  console.log(`Server One, listening at port: ${port}`);
+app.listen(port, () => {
+	console.log(`Server One, listening at port: ${port}`);
 });
 
 app.get('/getInstance', (req, res) => {
