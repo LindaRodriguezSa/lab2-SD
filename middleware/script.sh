@@ -4,7 +4,7 @@
 #el repositorio de nuestro proyecto, de 
 rm -r lab2-SD
 git clone https://cris2014971130:Distribuidos20@github.com/limarosa29/lab2-SD.git
-npm install express --save
 cd lab2-SD
 cd client-server
+npm install
 node api.js

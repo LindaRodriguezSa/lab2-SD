@@ -9,6 +9,7 @@ const exec = require("child_process").exec;
 const { create } = require("hbs");
 var name = "";
 app.use(express.static("./public"));
+const readLastLines = require('read-last-lines');
 exec("bash creacionArchivos.sh", (err, stdout, stderr) => {
   if (err) {
     console.error(`exec error: ${err}`);
@@ -18,6 +19,35 @@ exec("bash creacionArchivos.sh", (err, stdout, stderr) => {
     iniciar();
   }
 });
+
+exec("bash aux.sh", (err, stdout, stderr) => {
+  if (err) {
+    console.error(`exec error: ${err}`);
+    return;
+  }else{
+    console.log("archivo creado jaja");
+  }
+});
+const servidorFuera="";
+var serverAStatus="";
+
+setInterval(() => {
+	readLastLines.read('asd.txt', 5).then((lines) => {
+		let data = lines.split('\n');
+		for (var i = 0; i < data.length; i++) {
+			if (data[i].includes('Servidor')) {
+				if (data[i + 1] === ''){
+          serverAStatus = 'FAIL';
+          console.log(data[i]+": "+serverAStatus);
+        }else{
+          serverAStatus = 'OK';
+          console.log(data[i]+": "+serverAStatus);
+        } 
+			}
+		}
+	});
+}, 1000);
+
 
 var contadorServer = 0;
 
@@ -87,9 +117,26 @@ function createFile(nameAux) {
   'arp-scan --interface=wlp3s0 --localnet >>direcciones.txt'
   , function (err) {
     if (err) throw err;
-    console.log('File is created successfully.');
+    console.log('Archivo Bash Creacion VM creado.');
+  });
+  var infoToPrint="#!/bin/bash\n\n";
+  infoToPrint+="rm asd.txt\n";
+  infoToPrint+='watch -n 0.5 "(date +TIME:%H:%M:%S;';
+  var count=1;
+  for (let i = 0; i < listaServidores.length; i++) {
+    if(listaServidores[i]!=undefined){
+      infoToPrint+='echo Servidor'+count+';curl --connect-timeout 5 '+listaServidores[i]+":3000; echo '';";
+      count++;
+    }
+  }
+  infoToPrint+=') >> asd.txt"';
+  fs.writeFile('aux.sh',infoToPrint
+  , function (err) {
+    if (err) throw err;
+    console.log('Archivo Servidores creado');
   });
 }
+
 
 app.get("/getInstance", (req, res) => {
   console.log("Creando...");
@@ -149,7 +196,8 @@ function iniciar(){
 
 app.listen(port, () => {  
   console.log(`Server One, listening at port: ${port}`);
-=======
+});
+
 app.get('/getInstance', (req, res) => {
 	exec('bash prueba.sh', (err, stdout, stderr) => {
 		if (err) {

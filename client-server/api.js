@@ -9,6 +9,10 @@ app.use(function (req, res, next) {
 	next();
 });
 
+app.get('/', (req, res) => {
+	res.send('');
+});
+
 app.get('/getQuote', (req, res) => {
 	res.send(quotes.getRandomQuote());
 });
