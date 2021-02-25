@@ -6,11 +6,13 @@ const readLastLines = require('read-last-lines');
 const fs = require('fs');
 const readline = require('readline');
 const axios = require('axios');
-NOMBRE_ARCHIVO = 'direcciones.txt';
+const NOMBRE_ARCHIVO = 'direcciones.txt';
 const exec = require('child_process').exec;
-const { create } = require('hbs');
+
 var name = '';
+
 app.use(express.static('./public'));
+
 exec('bash creacionArchivos.sh', (err, stdout, stderr) => {
 	if (err) {
 		console.error(`exec error: ${err}`);
@@ -21,34 +23,34 @@ exec('bash creacionArchivos.sh', (err, stdout, stderr) => {
 	}
 });
 
-exec("bash aux.sh", (err, stdout, stderr) => {
-  if (err) {
-    console.error(`exec error: ${err}`);
-    return;
-  }else{
-    console.log("archivo creado jaja");
-  }
+exec('bash aux.sh', (err, stdout, stderr) => {
+	if (err) {
+		console.error(`exec error: ${err}`);
+		return;
+	} else {
+		console.log('archivo creado jaja');
+	}
 });
-const servidorFuera="";
-var serverAStatus="";
+
+const servidorFuera = '';
+var serverAStatus = '';
 
 setInterval(() => {
 	readLastLines.read('asd.txt', 20).then((lines) => {
 		let data = lines.split('\n');
 		for (var i = 0; i < data.length; i++) {
 			if (data[i].includes('Servidor')) {
-				if (data[i + 1] === ''){
-          serverAStatus = 'FAIL';
-          //console.log(data[i]+": "+serverAStatus);
-        }else{
-          serverAStatus = 'OK';
-          //console.log(data[i]+": "+serverAStatus);
-        } 
+				if (data[i + 1] === '') {
+					serverAStatus = 'FAIL';
+					//console.log(data[i]+": "+serverAStatus);
+				} else {
+					serverAStatus = 'OK';
+					//console.log(data[i]+": "+serverAStatus);
+				}
 			}
 		}
 	});
 }, 1000);
-
 
 var contadorServer = 0;
 
@@ -56,14 +58,13 @@ function getInfo() {
 	var valor;
 	var asd = '';
 	var fin = false;
-	var countAx= 0;
+	var countAx = 0;
 	for (let i = 0; i < listaServidores.length; i++) {
-		if(listaServidores[i]!=undefined){
+		if (listaServidores[i] != undefined) {
 			countAx++;
 		}
-		
 	}
-	name = (countAx+1);
+	name = countAx + 1;
 	for (var i = 0; i < listaServidores.length; i++) {
 		if (i == contadorServer) {
 			asd = contadorServer + '';
@@ -115,32 +116,39 @@ app.get('/email', (req, res) => {
 		}
 	});
 });
+
 function createFile(nameAux) {
-  fs.writeFile('creacionVM.sh', '#!/bin/bash\n\n'+
-  'VBoxManage clonevm ServidorOriginal --name="'+nameAux+'" --register --mode=all \--options=KeepNATMACs --options=keepdisknames --options=keephwuuids\n'+
-  'VBoxManage startvm "'+nameAux+'"\n'+
-  'rm direcciones.txt\n'+
-  'arp-scan --interface=wlp3s0 --localnet >>direcciones.txt'
-  , function (err) {
-    if (err) throw err;
-    console.log('Archivo Bash Creacion VM creado.');
-  });
-  var infoToPrint="#!/bin/bash\n\n";
-  infoToPrint+="rm asd.txt\n";
-  infoToPrint+='watch -n 0.5 "(date +TIME:%H:%M:%S;';
-  var count=1;
-  for (let i = 0; i < listaServidores.length; i++) {
-    if(listaServidores[i]!=undefined){
-      infoToPrint+='echo Servidor'+count+';curl --connect-timeout 5 '+listaServidores[i]+":3000; echo '';";
-      count++;
-    }
-  }
-  infoToPrint+=') >> asd.txt"';
-  fs.writeFile('aux.sh',infoToPrint
-  , function (err) {
-    if (err) throw err;
-    console.log('Archivo Servidores creado');
-  });
+	fs.writeFile(
+		'creacionVM.sh',
+		'#!/bin/bash\n\n' +
+			'VBoxManage clonevm ServidorOriginal --name="' +
+			nameAux +
+			'" --register --mode=all --options=KeepNATMACs --options=keepdisknames --options=keephwuuids\n' +
+			'VBoxManage startvm "' +
+			nameAux +
+			'"\n' +
+			'rm direcciones.txt\n' +
+			'arp-scan --interface=wlp3s0 --localnet >>direcciones.txt',
+		function (err) {
+			if (err) throw err;
+			console.log('Archivo Bash Creacion VM creado.');
+		}
+	);
+	var infoToPrint = '#!/bin/bash\n\n';
+	infoToPrint += 'rm asd.txt\n';
+	infoToPrint += 'watch -n 0.5 "(date +TIME:%H:%M:%S;';
+	var count = 1;
+	for (let i = 0; i < listaServidores.length; i++) {
+		if (listaServidores[i] != undefined) {
+			infoToPrint += 'echo Servidor' + count + ';curl --connect-timeout 5 ' + listaServidores[i] + ":3000; echo '';";
+			count++;
+		}
+	}
+	infoToPrint += ') >> asd.txt"';
+	fs.writeFile('aux.sh', infoToPrint, function (err) {
+		if (err) throw err;
+		console.log('Archivo Servidores creado');
+	});
 }
 
 
@@ -172,9 +180,11 @@ var listaServidores = new Array(4);
 var lineaxD = '';
 var asd = '';
 var contador = 0;
+
 let lector = readline.createInterface({
 	input: fs.createReadStream(NOMBRE_ARCHIVO),
 });
+
 lector.on('line', (linea) => {
 	if (linea.includes('08:00:27')) {
 		asd = linea.slice(0, -41);
@@ -188,14 +198,16 @@ lector.on('line', (linea) => {
  * Realiza una petición @get a el servidor correspondiente, dado por balanceo de carga
  */
 app.get('/getquote', (req, res) => {
-	const numServer= getInfo();
-		axios
-	 	.get(`${"192.168.0.9"}:3000/getQuote`)
-	 	.then((response) => {
-			res.send(response);
-			console.log(response);
-		 })
-	 	.catch((error) => console.log(error));	
+	const numServer = getInfo();
+	// axios
+	// 	.get(`http://${'127.0.0.1'}:2000/getQuote`)
+	// 	.then((response) => {
+	// 		res.send(response);
+	// 		console.log(response);
+	// 	})
+	// 	.catch((error) => console.log(error));
+
+	res.send('La vida es bella');
 });
 
 function iniciar() {
