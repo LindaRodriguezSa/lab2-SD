@@ -150,10 +150,11 @@ app.get("/getInstance", (req, res) => {
     getInfo();
     if (err) {
       console.error(`exec error: ${err}`);
-      return;
+      res.sendStatus(500);
     }else{
       console.log("logrado Maquina creada");
       showListaServer();
+	  res.sendStatus(200);
     }
   });
 });
