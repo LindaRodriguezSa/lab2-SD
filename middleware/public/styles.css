@@ -1,62 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Trispace:wght@500&display=swap');
-.content {
-    width: 700px;
-    margin: auto;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 20px;
-    box-shadow: 5px 20px 50px 15px #164958;
-    padding: 0px 0px 10px 5px;
-    background-color: #212121;
-    margin-top: 20px;
-}
-
 body {
-    margin: 50;
-    padding: 3px;
-    min-height: 100vh;
-    text-align: center;
     background-image: linear-gradient(-45deg, #e3ddd9 50%, #232F3F 50%);
-}
-
-.btn_frase {
-    background-color: #008CBA;
-    border: 3px solid #5eb2d1;
-}
-
-.btn_frase:hover {
-    background-color: #16a4d3;
-    color: white;
-}
-
-.btn_frase, .btn_instancia, .btn_email {
-    text-decoration: none;
-    padding: 8px;
-    font-weight: 100;
-    font-size: 18px;
-    color: black;
-    border-radius: 100px;
-}
-
-.btn_instancia {
-    background-color: #00ba19;
-    border: 3px solid #00cc44;
-}
-
-.btn_instancia:hover {
-    background-color: #2ecc71;
-    color: white;
+    margin: 50;
+    min-height: 100vh;
+    padding: 3px;
+    text-align: center;
 }
 
 .btn_email {
     background: rgb(202, 60, 60);
-    border: 3px solid #e92910;
     background-position: left;
-}
-
-.btn_email:hover {
-    background: rgb(247, 82, 82);
-    color: white;
+    border: 3px solid #e92910;
 }
 
 .btn_email:before {
@@ -71,30 +25,38 @@ body {
     width: 30px;
 }
 
-#file-input {
-    display: none;
+.btn_email:hover {
+    background: rgb(247, 82, 82);
+    color: white;
 }
 
-#quote {
-    background: rgba(255, 255, 255, 0.);
-    font-size: 23px;
-    position: relative;
-    top: -20px;
-    color: rgb(27, 26, 26);
-    margin: 0;
-    padding: 0;
+.btn_frase {
+    border: 3px solid #5eb2d1;
+    background-color: #008CBA;
 }
 
-#servernum {
-    font-size: 23px;
-    position: relative;
-    color: rgb(174, 177, 18);
-    margin: 0;
-    padding: 0;
+.btn_frase:hover {
+    background-color: #16a4d3;
+    color: white;
 }
 
-.image:hover {
-    filter: brightness(1.2);
+.btn_frase, .btn_instancia, .btn_email {
+    border-radius: 100px;
+    color: black;
+    font-size: 18px;
+    font-weight: 100;
+    padding: 8px;
+    text-decoration: none;
+}
+
+.btn_instancia {
+    background-color: #00ba19;
+    border: 3px solid #00cc44;
+}
+
+.btn_instancia:hover {
+    background-color: #2ecc71;
+    color: white;
 }
 
 #buttons {
@@ -106,51 +68,85 @@ body {
 }
 
 .carousel-item {
+    align-items: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
     user-select: none;
 }
 
+.carousel.indicators .indicator-item {
+    background: #35221c;
+    border-radius: 0;
+    margin: 0 15px;
+    transform: rotate(45deg);
+}
+
+.content {
+    background-color: #212121;
+    border-radius: 20px;
+    box-shadow: 5px 20px 50px 15px #164958;
+    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    padding: 0px 0px 10px 5px;
+    width: 700px;
+}
+
+#file-input {
+    display: none;
+}
+
 .image {
-    object-fit: cover;
-    position: absolute;
-    left: 0;
-    z-index: -1;
     border-radius: 10px;
+    box-shadow: 5px 5px 16px 1px rgba(0, 0, 0, 0.70);
     cursor: pointer;
     height: 150%;
+    left: 0;
+    object-fit: cover;
+    position: absolute;
     width: 100%;
-    box-shadow: 5px 5px 16px 1px rgba(0, 0, 0, 0.70);
-}
-
-.titulo {
-    font-size: 30px;
-    font-family: 'Dancing Script', cursive;
-    color: #fff;
-}
-
-.carousel.indicators .indicator-item {
-    border-radius: 0;
-    transform: rotate(45deg);
-    margin: 0 15px;
-    background: #35221c;
+    z-index: -1;
 }
 
 #image-url {
     border: 2px solid #CED6E0;
+    border-radius: 5px;
     font-size: 14px;
     height: 20px;
-    width: 30%;
+    margin-top: 20px;
     padding: 3px 12px;
     transition: .3s ease all;
-    border-radius: 5px;
-    margin-top: 20px;
+    width: 30%;
 }
 
 #image-url:hover {
     border: 2px solid #93BDED;
     margin-bottom: 20px;
     text-transform: uppercase;
+}
+
+#quote {
+    background: rgba(255, 255, 255, 0.);
+    color: rgb(27, 26, 26);
+    font-size: 23px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    top: -20px;
+}
+
+#servernum {
+    color: rgb(174, 177, 18);
+    font-size: 23px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.titulo {
+    color: #fff;
+    font-family: 'Dancing Script', cursive;
+    font-size: 30px;
 }

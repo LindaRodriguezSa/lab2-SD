@@ -10,7 +10,7 @@ app.use(function (req, res, next) {
 });
 
 app.get('/', (req, res) => {
-	res.send('');
+	res.send('Funcionando');
 });
 
 app.get('/getQuote', (req, res) => {

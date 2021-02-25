@@ -1,18 +1,8 @@
 let index = 0;
-let servidores;
-
-let quoteData = {
-	quote: "'El sabio no dice nunca todo lo que piensa, pero siempre piensa todo lo que dice (Aristóteles)'",
-};
 
 let serverData = {
-  server: "2",
+	server: 0,
 };
-
-var compQuote = new Vue({
-	el: '#quote',
-	data: quoteData,
-});
 
 var servernum = new Vue({
 	el: '#servernum',
@@ -39,43 +29,36 @@ var buttonsa = new Vue({
  * @request get
  */
 function changeQuote() {
-	// valida que el usuario ingrese un link de una imagen, si no es asi, pone una default
+	// valida que elthis usuario ingrese un link de una imagen, si no es asi, pone una default
 	let newsrc = document.getElementById('image-url').value;
 	if (newsrc == '') {
-		newsrc =
-			'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=770&q=80';
+		newsrc = 'https://images.financialexpress.com/2020/04/sky660.jpg';
 	}
 
 	imagecomponent.images[index].src = newsrc;
 
-	imagecomponent.image = imagecomponent.images[index];
-
-	fetch('/getQuote')
+	fetch('/getquote')
 		.then((response) => response.text())
 		.then((comingQuote) => {
-			console.log(comingQuote);
-			quoteData.quote = comingQuote;
+			imagecomponent.images[index].quote = comingQuote;
 		})
 		.catch((error) => console.log(error));
-
-	// fetch("/getServer")
-	//   .then((response) => response.text())
-	//   .then((info) => serverData.server.info);
 }
 
 function createInstance() {
-  fetch("/getInstance");
-  imagecomponent.images.push({
-    index: imagecomponent.images.length + 1,
-    src:
-      "https://i.picsum.photos/id/430/536/354.jpg?hmac=uxrNCXgJuycp2JMZ9jpZb5ThTsZIplRTSPuc4ybMyws",
-  });
-  alert("Instancia creada");
+	// fetch('/getInstance');
+
+	imagecomponent.images.push({
+		id: imagecomponent.images.length,
+		src: 'http://c.files.bbci.co.uk/169C7/production/_112151629_gettyimages-1142576725.jpg',
+		quote: 'Frase auxiliar (aux)',
+	});
+
+	alert('Creando instancia ...');
 }
 
 function sendEmail() {
-  fetch("/email");
-  console.log("nddkd");
+	fetch('/email');
 }
 
 var imagecomponent = new Vue({
@@ -87,31 +70,34 @@ var imagecomponent = new Vue({
 				{
 					id: 0,
 					src: 'https://blog.hubspot.com/hubfs/famous-quotes.jpg',
+					quote: '"El sabio no dice nunca todo lo que piensa, pero siempre piensa todo lo que dice" (Aristóteles)',
 				},
 				{
 					id: 1,
-					src: 'https://www.planetware.com/wpimages/2019/09/top-places-to-visit-in-the-world-machu-picchu-peru.jpg',
+					src: 'https://www.wellandgood.com/wp-content/uploads/2016/06/Stocksy-Waterfall-Alexander-Grabchilev-1.jpg',
+					quote: '"La más estricta justicia no creo que sea siempre la mejor política" (Abraham Lincoln)',
 				},
 				{
 					id: 2,
 					src: 'https://cdn.tinybuddha.com/wp-content/uploads/2018/09/Woman-on-a-bench.png',
+					quote: '"Cada día sabemos más y entendemos menos" (Albert Einstein)',
 				},
 			],
 		};
 	},
+	mounted() {
+		loadImagesOnCarousel();
+	},
+	updated() {
+		let indicatorsElement = document.querySelector('.indicators');
+		indicatorsElement.remove();
+		loadImagesOnCarousel();
+	},
 });
 
-function rand(n) {
-	return Math.floor(Math.random() * n + 1);
-}
-
-function cambiar() {
-	document.getElementById('ia').src = images[rand(images.length) - 1];
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-	const elementosCarousel = document.querySelectorAll('.carousel');
-	M.Carousel.init(elementosCarousel, {
+function loadImagesOnCarousel() {
+	const instance = document.querySelectorAll('.carousel');
+	M.Carousel.init(instance, {
 		duration: 150,
 		dist: -80,
 		shift: 5,
@@ -126,9 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			let currentImgID = parseInt(data.getAttribute('data-id'));
 			// finalmente actualizo el index en el que voy
 			// tanto en logica como en ui
-			console.log(typeof currentImgID);
 			index = currentImgID;
 			serverData.server = currentImgID + 1;
 		},
 	});
-});
+}
