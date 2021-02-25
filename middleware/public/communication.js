@@ -46,7 +46,7 @@ function changeQuote() {
 }
 
 function createInstance() {
-	// fetch('/getInstance');
+	fetch('/getInstance');
 
 	imagecomponent.images.push({
 		id: imagecomponent.images.length,

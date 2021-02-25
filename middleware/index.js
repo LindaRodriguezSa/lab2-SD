@@ -33,16 +33,16 @@ const servidorFuera="";
 var serverAStatus="";
 
 setInterval(() => {
-	readLastLines.read('asd.txt', 5).then((lines) => {
+	readLastLines.read('asd.txt', 20).then((lines) => {
 		let data = lines.split('\n');
 		for (var i = 0; i < data.length; i++) {
 			if (data[i].includes('Servidor')) {
 				if (data[i + 1] === ''){
           serverAStatus = 'FAIL';
-          console.log(data[i]+": "+serverAStatus);
+          //console.log(data[i]+": "+serverAStatus);
         }else{
           serverAStatus = 'OK';
-          console.log(data[i]+": "+serverAStatus);
+          //console.log(data[i]+": "+serverAStatus);
         } 
 			}
 		}
@@ -56,8 +56,14 @@ function getInfo() {
 	var valor;
 	var asd = '';
 	var fin = false;
-	valor = listaServidores.length;
-	name = valor;
+	var countAx= 0;
+	for (let i = 0; i < listaServidores.length; i++) {
+		if(listaServidores[i]!=undefined){
+			countAx++;
+		}
+		
+	}
+	name = (countAx+1);
 	for (var i = 0; i < listaServidores.length; i++) {
 		if (i == contadorServer) {
 			asd = contadorServer + '';
@@ -181,12 +187,14 @@ lector.on('line', (linea) => {
  * Realiza una petición @get a el servidor correspondiente, dado por balanceo de carga
  */
 app.get('/getquote', (req, res) => {
-	// axios
-	// 	.get(`${ipservidorquecorresponda}/getQuote`)
-	// 	.then((response) => res.send(response))
-	// 	.catch((error) => console.log(error));
-
-	res.send('Para trabajar basta estar convencido de una cosa: que trabajar es menos aburrido que divertirse');
+	const numServer= getInfo();
+		axios
+	 	.get(`${"192.168.0.9"}:3000/getQuote`)
+	 	.then((response) => {
+			res.send(response);
+			console.log(response);
+		 })
+	 	.catch((error) => console.log(error));	
 });
 
 function iniciar() {
@@ -199,13 +207,4 @@ function iniciar() {
 
 app.listen(port, () => {
 	console.log(`Server One, listening at port: ${port}`);
-});
-
-app.get('/getInstance', (req, res) => {
-	exec('bash prueba.sh', (err, stdout, stderr) => {
-		if (err) {
-			console.error(`exec error: ${err}`);
-			return;
-		}
-	});
 });
