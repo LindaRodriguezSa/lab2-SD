@@ -14,6 +14,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/getQuote', (req, res) => {
+	console.log("llegue :v");
 	res.send(quotes.getRandomQuote());
 });
 
