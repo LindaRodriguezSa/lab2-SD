@@ -20,21 +20,26 @@
                 </div>
             </div>
         </div>
-        <h3 id="servernum">Servidor # : {{ server }}</h3>
+        <section id="servernum">
+            <h3 class="server-number" v-if="fullServers">
+                Todos los servidores ocupados !!!<br>Cree una nueva instancia
+            </h3>
+            <h3 class="server-number" v-else="fullServers">Servidor # : {{ server }}</h3>
+        </section>
     </div>
-
 
     <div>
         <label for="inputNombre">Nombre</label>
         <input type="url" id="image-url" autocomplete="on" placeholder="Link directo a la imagen que quieres :D">
     </div>
     <div id="buttons">
-        <button class="btn_frase" v-on:click="frase">Cambiar imagen</button>
+        <button id="btn-frase" class="btn_frase" v-on:click="frase"> Cambiar imagen y frase </button>
         <button class="btn_instancia" v-on:click="instancia">Nueva Instancia</button>
         <button class="btn_email" v-on:click="email">Notificar Falla</button>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 
+    <!-- CDNs dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="communication.js"></script>
 </body>
