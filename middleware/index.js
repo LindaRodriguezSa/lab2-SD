@@ -23,7 +23,7 @@ exec('bash creacionArchivos.sh', (err, stdout, stderr) => {
 	}
 });
 
-exec('bash aux.sh', (err, stdout, stderr) => {
+exec('bash watchmv.sh', (err, stdout, stderr) => {
 	if (err) {
 		console.error(`exec error: ${err}`);
 		return;
@@ -145,7 +145,7 @@ function createFile(nameAux) {
 		}
 	}
 	infoToPrint += ') >> asd.txt"';
-	fs.writeFile('aux.sh', infoToPrint, function (err) {
+	fs.writeFile('watchmv.sh', infoToPrint, function (err) {
 		if (err) throw err;
 		console.log('Archivo Servidores creado');
 	});
@@ -199,15 +199,13 @@ lector.on('line', (linea) => {
  */
 app.get('/getquote', (req, res) => {
 	const numServer = getInfo();
-	// axios
-	// 	.get(`http://${'127.0.0.1'}:2000/getQuote`)
-	// 	.then((response) => {
-	// 		res.send(response);
-	// 		console.log(response);
-	// 	})
-	// 	.catch((error) => console.log(error));
-
-	res.send('La vida es bella');
+	 axios
+	 	.get(`http://${'192.168.0.16'}:3000/getQuote`)
+	 	.then((response) => {
+	 		res.send(response.data);
+	 		console.log(response.data);
+	 	})
+	 	.catch((error) => console.log(error));
 });
 
 function iniciar() {
