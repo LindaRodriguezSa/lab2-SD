@@ -127,6 +127,12 @@ body {
     text-transform: uppercase;
 }
 
+.labelurl {
+    color: white;
+    font-size: 16px;
+    /* background: #031d27; */
+}
+
 #quote {
     background: rgba(255, 255, 255, 0.);
     color: rgb(27, 26, 26);
@@ -146,7 +152,141 @@ body {
 }
 
 .titulo {
-    color: #fff;
+    color: rgb(70, 16, 16);
     font-family: 'Dancing Script', cursive;
     font-size: 30px;
+}
+
+/* monitoreo */
+
+.contenedorMonitoreo {
+    width: 70%;
+    padding: 30px 20px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.labelmoni {
+    color: white;
+    font-size: 18px;
+    background: #031d27;
+    padding: 10px 20px 20px 20px;
+    top: -55px;
+    text-align: right;
+    font-family: 'Lato', sans-serif;
+    border-radius: 20%;
+    box-shadow: -5px 4px 8px rgba(24, 56, 182, 0.4);
+}
+
+/* ----------  Boton monitoreo----------*/
+
+.btn-abrir-formulario {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    background: #709ebd;
+    color: #fff;
+    position: relative;
+    top: -25px;
+    z-index: 3;
+    border-radius: 100%;
+    box-shadow: -5px 4px 8px rgba(24, 56, 182, 0.4);
+    padding: 5px;
+    transition: all .2s ease;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}
+
+.btn-abrir-formulario:hover {
+    background: #1850b1;
+}
+
+.btn-abrir-formulario.active {
+    transform: rotate(50deg);
+}
+
+/* ----------  Tarjeta monitoreo----------*/
+
+.tarjeta {
+    background: rgb(255, 255, 255);
+    width: 70%;
+    max-width: 600px;
+    padding: 50px 30px 30px 30px;
+    border-radius: 20px;
+    position: relative;
+    top: -100px;
+    z-index: 1;
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    transition: clip-path .3s ease-out;
+}
+
+.tarjeta.active {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* label */
+
+.tarjeta label {
+    display: block;
+    color: #7d8994;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.tarjeta input, .tarjeta select, .btn-enviar {
+    border: 2px solid #CED6E0;
+    font-size: 18px;
+    height: 50px;
+    width: 100%;
+    padding: 5px 12px;
+    transition: .3s ease all;
+    border-radius: 5px;
+}
+
+.tarjeta input:hover, .tarjeta select:hover {
+    border: 2px solid #93BDED;
+}
+
+.tarjeta input:focus, .tarjeta select:focus {
+    outline: rgb(4, 4, 4);
+    box-shadow: 1px 7px 10px -5px rgba(90, 116, 148, 0.3);
+}
+
+.tarjeta input {
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+/* ----------boton enviar---------- */
+
+.btn-enviar {
+    border: none;
+    padding: 10px;
+    font-size: 22px;
+    color: #fff;
+    background: #2364d2;
+    box-shadow: 2px 2px 10px 0px rgba(0, 85, 212, 0.4);
+    cursor: pointer;
+}
+
+table {
+    background-color: white;
+    text-align: center;
+    width: 100%;
+    border: 1px solid rgb(196, 236, 86);
+}
+
+th, td {
+    border: solid;
+    border-collapse: collapse;
+    text-align: center;
+    margin: 15px;
+}
+
+th {
+    background-color: darkcyan;
+    font-size: 20px;
 }
