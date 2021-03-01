@@ -5,6 +5,8 @@ const nodemailer = require('nodemailer');
 const readLastLines = require('read-last-lines');
 const fs = require('fs');
 const readline = require('readline');
+const fs2 = require('fs');
+const readline2 = require('readline');
 const axios = require('axios');
 const NOMBRE_ARCHIVO = 'direcciones.txt';
 const exec = require('child_process').exec;
@@ -35,7 +37,7 @@ exec('bash creacionArchivos.sh', (err, stdout, stderr) => {
 	}
 });
 
-exec('bash watchmv.sh', (err, stdout, stderr) => {
+const fafa = exec('bash watchmv.sh', (err, stdout, stderr) => {
 	if (err) {
 		console.error(`exec error: ${err}`);
 		return;
@@ -46,7 +48,7 @@ exec('bash watchmv.sh', (err, stdout, stderr) => {
 
 var counter=0;
 setInterval(() => {
-	readLastLines.read('asd.txt', 20).then((lines) => {
+	readLastLines.read('asd.txt', 10).then((lines) => {
 		let data = lines.split('\n');
 		for (var i = 0; i < data.length; i++) {
 			if (data[i].includes('Servidor')) {
@@ -83,7 +85,7 @@ setInterval(() => {
 		showListaServer();
 	});
 	
-}, 5000);
+}, 10000);
 
 var contadorServer = 0;
 
@@ -172,7 +174,7 @@ function createFile(nameAux) {
 			console.log('Archivo Bash Creacion VM creado.');
 		}
 	);
-	crearWatch();
+	crearWatch("watc");
 }
 
 /**
@@ -203,15 +205,12 @@ Crea una nueva instancia y la inicia
 app.get("/getInstance", (req, res) => {
   console.log("Creando...");
   exec("bash creacionVM.sh", (err, stdout, stderr) => {
-    getInfo();
     if (err) {
       console.error(`exec error: ${err}`);
-      res.sendStatus(500);
+      res.send("500");
     }else{
-	  iniciar();
       console.log("logrado Maquina creada");
-	  res.sendStatus(200);
-	  alert('Maquina creada');
+	  res.send("200");
     }
   });
 });
@@ -241,7 +240,7 @@ lector.on('line', (linea) => {
 		contador++;
 	}
 	contador == 0;
-},5000);
+});
 
 /**
  * Realiza una petición @get a el servidor correspondiente, dado por balanceo de carga
@@ -281,6 +280,49 @@ function getName(){
 	}
 	name = countAx + 1;
 }
+
+/**
+ * Reinicia todos lo ssubprocesos para actualizar la nueva instancia
+ */
+app.get('/getreset', (req, res) => {
+	console.log("Actualizando informacion");
+	exec('bash creacionArchivos2.sh', (err, stdout, stderr) => {
+		if (err) {
+			console.error(`exec error: ${err}`);
+			return;
+		} else {
+			console.log('Archivo creado');
+			res.send("200");
+		}
+	});
+	let lector2 = readline2.createInterface({
+		input: fs2.createReadStream("direcciones2.txt"),
+	});
+	var pos=0;
+	//falta agregar bien a la lsita, omitir los que ya estan
+	lector2.on('line', (linea) => {
+		if (linea.includes('08:00:27')) {
+			asd = linea.slice(0, -41);
+			for (let i = 0; i < listaServidores.length; i++) {
+				if(listaServidores[i]!= undefined){
+					if(listaServidores[i].includes(asd)){
+						pos++;
+						break;
+					}else{
+						listaServidores[pos]=asd;
+						pos++;
+						break;
+					}					
+				}
+				
+			}
+			
+		}
+	});
+	crearWatch();
+	fafa.exitCode();
+	iniciar();
+});
 
 app.listen(port, () => {
 	console.log(`Server One, listening at port: ${port}`);

@@ -1,0 +1,15 @@
+Interface: wlp3s0, type: EN10MB, MAC: 6c:71:d9:85:9b:39, IPv4: 192.168.0.8
+Starting arp-scan 1.9.7 with 256 hosts (https://github.com/royhills/arp-scan)
+192.168.0.9	08:00:27:99:9d:55	PCS Systemtechnik GmbH
+192.168.0.11	08:00:27:d0:2d:98	PCS Systemtechnik GmbH
+192.168.0.12	08:00:27:6f:40:ea	PCS Systemtechnik GmbH
+192.168.0.28	08:00:27:60:b2:3c	PCS Systemtechnik GmbH
+192.168.0.1	00:00:ca:11:22:33	ARRIS Group, Inc.
+192.168.0.2	1c:cc:d6:ba:4d:fc	Xiaomi Communications Co Ltd
+192.168.0.4	9c:d2:1e:06:b3:50	Hon Hai Precision Ind. Co.,Ltd.
+192.168.0.25	f4:71:90:36:a0:f3	Samsung Electronics Co.,Ltd
+192.168.0.1	00:00:ca:11:22:33	ARRIS Group, Inc. (DUP: 2)
+192.168.0.25	f4:71:90:36:a0:f3	Samsung Electronics Co.,Ltd (DUP: 2)
+
+10 packets received by filter, 0 packets dropped by kernel
+Ending arp-scan 1.9.7: 256 hosts scanned in 2.052 seconds (124.76 hosts/sec). 10 responded
