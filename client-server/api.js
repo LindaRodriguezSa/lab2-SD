@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/getQuote", (req, res) => {
-  console.log("llegue :v");
+  console.log("Frase solicitada");
   res.send(quotes.getRandomQuote());
 });
 

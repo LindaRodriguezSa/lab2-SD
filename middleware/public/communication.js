@@ -1,7 +1,8 @@
-let index = 0;
+let workingServer = 0;
 
 let serverData = {
   server: 0,
+  fullServers: false,
 };
 
 var servernum = new Vue({
@@ -28,21 +29,33 @@ var buttonsa = new Vue({
  * Realiza una petición al servidor para cambiar la frase
  * @request get
  */
-function changeQuote() {
-  // valida que elthis usuario ingrese un link de una imagen, si no es asi, pone una default
-  let newsrc = document.getElementById("image-url").value;
-  if (newsrc == "") {
-    newsrc = "https://images.financialexpress.com/2020/04/sky660.jpg";
+async function changeQuote() {
+  if (workingServer > imagecomponent.images.length - 1) {
+    serverData.fullServers = true;
+    document.querySelector("#btn-frase").classList.add("btn-frase-disabled");
+    document.querySelector("#btn-frase").classList.remove("btn_frase");
+  } else {
+    // valida que el usuario ingrese un link de una imagen, si no es asi, pone una default
+    let newsrc = document.getElementById("image-url").value;
+    if (newsrc == "") {
+      newsrc = "https://images.financialexpress.com/2020/04/sky660.jpg";
+    }
+
+    imagecomponent.images[workingServer].src = newsrc;
+
+    await fetch("/getquote")
+      .then((response) => response.text())
+      .then((comingQuote) => {
+        imagecomponent.images[workingServer].quote = comingQuote;
+      })
+      .catch((error) => console.log(error));
+
+    let carouselElement = document.querySelector(".carousel");
+    let carouselInstance = M.Carousel.getInstance(carouselElement);
+    carouselInstance.set(workingServer);
+
+    workingServer++;
   }
-
-  imagecomponent.images[index].src = newsrc;
-
-  fetch("/getquote")
-    .then((response) => response.text())
-    .then((comingQuote) => {
-      imagecomponent.images[index].quote = comingQuote;
-    })
-    .catch((error) => console.log(error));
 }
 
 function createInstance() {
@@ -54,6 +67,12 @@ function createInstance() {
       "http://c.files.bbci.co.uk/169C7/production/_112151629_gettyimages-1142576725.jpg",
     quote: "Frase auxiliar (aux)",
   });
+
+  if (workingServer < imagecomponent.images.length) {
+    serverData.fullServers = false;
+    document.querySelector("#btn-frase").classList.remove("btn-frase-disabled");
+    document.querySelector("#btn-frase").classList.add("btn_frase");
+  }
 
   alert("Creando instancia ...");
 }
@@ -138,7 +157,6 @@ function loadImagesOnCarousel() {
       let currentImgID = parseInt(data.getAttribute("data-id"));
       // finalmente actualizo el index en el que voy
       // tanto en logica como en ui
-      index = currentImgID;
       serverData.server = currentImgID + 1;
     },
   });

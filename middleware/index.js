@@ -6,12 +6,25 @@ const readLastLines = require("read-last-lines");
 const fs = require("fs");
 const readline = require("readline");
 const axios = require("axios");
-NOMBRE_ARCHIVO = "direcciones.txt";
+const NOMBRE_ARCHIVO = "direcciones.txt";
 const exec = require("child_process").exec;
-const { create } = require("hbs");
-var name = "";
 
+var name = "";
+var nameAux = "";
 app.use(express.static("./public"));
+var listaServidores = new Array(10);
+var lineaxD = "";
+var asd = "";
+var contador = 0;
+const servidorFuera = "";
+var serverAStatus = "";
+var listaServidoresStatus = new Array(10);
+var sendCorreo = false;
+var contFail = 0;
+
+/**
+ * Metodos exec encargados de ejecutar los bash creacionArchivos.sh y watchmv.sh
+ */
 exec("bash creacionArchivos.sh", (err, stdout, stderr) => {
   if (err) {
     console.error(`exec error: ${err}`);
@@ -22,7 +35,7 @@ exec("bash creacionArchivos.sh", (err, stdout, stderr) => {
   }
 });
 
-exec("bash aux.sh", (err, stdout, stderr) => {
+exec("bash watchmv.sh", (err, stdout, stderr) => {
   if (err) {
     console.error(`exec error: ${err}`);
     return;
@@ -30,39 +43,53 @@ exec("bash aux.sh", (err, stdout, stderr) => {
     console.log("archivo creado jaja");
   }
 });
-const servidorFuera = "";
-var serverAStatus = "";
 
+var counter = 0;
 setInterval(() => {
   readLastLines.read("asd.txt", 20).then((lines) => {
     let data = lines.split("\n");
     for (var i = 0; i < data.length; i++) {
       if (data[i].includes("Servidor")) {
-        if (data[i + 1] === "") {
+        if (data[i + 1].includes("Funcionando") == false) {
           serverAStatus = "FAIL";
           //console.log(data[i]+": "+serverAStatus);
+          contFail++;
+          if (sendCorreo == false && contFail > 4) {
+            sendEmail(data[i]);
+            sendCorreo = true;
+            console.log("Email enviado");
+          }
+          listaServidoresStatus[counter] = serverAStatus;
+          counter++;
+          i++;
         } else {
           serverAStatus = "OK";
+          listaServidoresStatus[counter] = serverAStatus;
+          counter++;
           //console.log(data[i]+": "+serverAStatus);
+          i++;
         }
       }
     }
+    var counAux = 0;
+    for (let i = 0; i < listaServidores.length; i++) {
+      if (listaServidores[i] != undefined) {
+        counAux++;
+      }
+    }
+    if (counter >= counAux) {
+      counter = 0;
+    }
+    showListaServer();
   });
-}, 1000);
+}, 5000);
 
 var contadorServer = 0;
 
 function getInfo() {
-  var valor;
+  var valor = listaServidores.length;
   var asd = "";
   var fin = false;
-  var countAx = 0;
-  for (let i = 0; i < listaServidores.length; i++) {
-    if (listaServidores[i] != undefined) {
-      countAx++;
-    }
-  }
-  name = countAx + 1;
   for (var i = 0; i < listaServidores.length; i++) {
     if (i == contadorServer) {
       asd = contadorServer + "";
@@ -89,7 +116,15 @@ app.get("/", (req, res) => {
 });
 
 //Info para enviar el correo
+
 app.get("/email", (req, res) => {
+  sendEmail();
+});
+
+/**
+ * Funcion encargada de enviar el email
+ */
+function sendEmail(nameServerFail) {
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -103,7 +138,9 @@ app.get("/email", (req, res) => {
     to: "cris.2014971130@gmail.com",
     subject: "Reporte Caida de Servidor",
     text:
-      "El servidor X se ha caido. Si desea solucionar el error, ingrese a la aplicacion!",
+      'El servidor "' +
+      nameServerFail +
+      '" se ha caido. Si desea solucionar el error, ingrese a la aplicacion!',
   };
 
   transporter.sendMail(mailOptions, function (error, info) {
@@ -114,7 +151,12 @@ app.get("/email", (req, res) => {
       res.send("Email sent: " + info.response);
     }
   });
-});
+}
+
+/**
+ * Metooo encargado de crear el archivo bash que creara la nueva instancia, tambien
+ * llama al metodo crearWatch()
+ */
 function createFile(nameAux) {
   fs.writeFile(
     "creacionVM.sh",
@@ -132,6 +174,14 @@ function createFile(nameAux) {
       console.log("Archivo Bash Creacion VM creado.");
     }
   );
+  crearWatch();
+}
+
+/**
+ * Metodo que crea un bash que se encargara de monitorear todas las
+ * conexiones con sus IP respectivas
+ */
+function crearWatch() {
   var infoToPrint = "#!/bin/bash\n\n";
   infoToPrint += "rm asd.txt\n";
   infoToPrint += 'watch -n 0.5 "(date +TIME:%H:%M:%S;';
@@ -148,50 +198,61 @@ function createFile(nameAux) {
     }
   }
   infoToPrint += ') >> asd.txt"';
-  fs.writeFile("aux.sh", infoToPrint, function (err) {
+  fs.writeFile("watchmv.sh", infoToPrint, function (err) {
     if (err) throw err;
     console.log("Archivo Servidores creado");
   });
 }
 
+/*
+Crea una nueva instancia y la inicia
+*/
 app.get("/getInstance", (req, res) => {
   console.log("Creando...");
   exec("bash creacionVM.sh", (err, stdout, stderr) => {
     getInfo();
     if (err) {
       console.error(`exec error: ${err}`);
-      return;
+      res.sendStatus(500);
     } else {
+      iniciar();
       console.log("logrado Maquina creada");
-      showListaServer();
+      res.sendStatus(200);
+      alert("Maquina creada");
     }
   });
 });
 
+// Metodo que muestra la lista de servidores
 function showListaServer() {
   console.log("lista de servidores");
   for (let index = 0; index < listaServidores.length; index++) {
     if (listaServidores[index] != undefined) {
-      console.log(listaServidores[index]);
+      console.log(listaServidores[index] + "	" + listaServidoresStatus[index]);
     }
   }
 }
 
-var listaServidores = new Array(4);
-var lineaxD = "";
-var asd = "";
-var contador = 0;
+/*
+Proceso encargado de leer el archivo de direcciones.txt para sacar la lista de
+los nuevos servidores
+*/
 let lector = readline.createInterface({
   input: fs.createReadStream(NOMBRE_ARCHIVO),
 });
-lector.on("line", (linea) => {
-  if (linea.includes("08:00:27")) {
-    asd = linea.slice(0, -41);
-    listaServidores[contador] = asd;
-    contador++;
-  }
-  contador == 0;
-});
+
+lector.on(
+  "line",
+  (linea) => {
+    if (linea.includes("08:00:27")) {
+      asd = linea.slice(0, -41);
+      listaServidores[contador] = asd;
+      contador++;
+    }
+    contador == 0;
+  },
+  5000
+);
 
 /**
  * Realiza una petición @get a el servidor correspondiente, dado por balanceo de carga
@@ -199,10 +260,10 @@ lector.on("line", (linea) => {
 app.get("/getquote", (req, res) => {
   const numServer = getInfo();
   axios
-    .get(`${"192.168.0.9"}:3000/getQuote`)
+    .get(`http://${listaServidores[numServer]}:3000/getQuote`)
     .then((response) => {
-      res.send(response);
-      console.log(response);
+      res.send(response.data);
+      console.log(response.data);
     })
     .catch((error) => console.log(error));
 });
@@ -225,12 +286,28 @@ app.get("/getserverinformation", (req, res) => {
   res.send(JSON.stringify(serverInfo));
 });
 
+/**
+ * Inicia y crea todos los procesos que se usaran en el programa
+ */
 function iniciar() {
-  getInfo();
-  var nameAux = "Servidor" + name;
+  getName();
+  nameAux = "Servidor" + name;
   createFile(nameAux);
   console.log(nameAux);
   showListaServer();
+}
+
+/**
+ * Metodo encargado de traer el nombre de la nueva instancia que se creara
+ */
+function getName() {
+  var countAx = 0;
+  for (let i = 0; i < listaServidores.length; i++) {
+    if (listaServidores[i] != undefined) {
+      countAx++;
+    }
+  }
+  name = countAx + 1;
 }
 
 app.listen(port, () => {

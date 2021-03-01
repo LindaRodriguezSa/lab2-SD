@@ -31,8 +31,14 @@ body {
 }
 
 .btn_frase {
-    border: 3px solid #5eb2d1;
     background-color: #008CBA;
+    border: 3px solid #5eb2d1;
+}
+
+.btn-frase-disabled {
+    background-color: #2b3a3f;
+    border: 3px solid #5eb2d1;
+    pointer-events: none;
 }
 
 .btn_frase:hover {
@@ -40,7 +46,7 @@ body {
     color: white;
 }
 
-.btn_frase, .btn_instancia, .btn_email {
+.btn_frase, .btn-frase-disabled, .btn_instancia, .btn_email {
     border-radius: 100px;
     color: black;
     font-size: 18px;
@@ -143,7 +149,7 @@ body {
     top: -20px;
 }
 
-#servernum {
+.server-number {
     color: rgb(174, 177, 18);
     font-size: 23px;
     margin: 0;

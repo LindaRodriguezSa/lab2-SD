@@ -20,16 +20,20 @@
                 </div>
             </div>
         </div>
-        <h3 id="servernum">Servidor # : {{ server }}</h3>
+        <section id="servernum">
+            <h3 class="server-number" v-if="fullServers">
+                Todos los servidores ocupados !!!<br>Cree una nueva instancia
+            </h3>
+            <h3 class="server-number" v-else="fullServers">Servidor # : {{ server }}</h3>
+        </section>
     </div>
-
 
     <div>
         <label for="inputNombre" class="labelurl">Url Imagen</label>
         <input type="url" id="image-url" autocomplete="on" placeholder="Link directo a la imagen que quieres :D">
     </div>
     <div id="buttons">
-        <button class="btn_frase" v-on:click="frase">Cambiar imagen</button>
+        <button id="btn-frase" class="btn_frase" v-on:click="frase"> Cambiar imagen y frase </button>
         <button class="btn_instancia" v-on:click="instancia">Nueva Instancia</button>
     </div>
 
