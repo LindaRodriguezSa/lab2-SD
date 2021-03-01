@@ -74,6 +74,7 @@ function createInstance() {
 	}
 
 	alert('Creando instancia ...');
+	
 }
 
 function sendEmail() {
