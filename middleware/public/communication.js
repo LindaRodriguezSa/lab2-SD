@@ -82,10 +82,6 @@ function sendEmail() {
 }
 
 function getserverinfo() {
-  // servidores.serversList.push({
-  //   ip: "1233.34.344",
-  //   status: "ok",
-  // });
   fetch("/getserverinformation")
     .then((response) => response.json())
     .then((obj) => (servidores.serversList = obj))

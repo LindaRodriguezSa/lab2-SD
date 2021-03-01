@@ -269,20 +269,13 @@ app.get("/getquote", (req, res) => {
 });
 
 app.get("/getserverinformation", (req, res) => {
-  let serverInfo = [
-    {
-      ip: "123.244.44.2",
-      status: "ok",
-    },
-  ];
-  for (const servidor of listaServidores) {
+  let serverInfo = [];
+  for (let index = 0; index < listaServidores.length; index++) {
     serverInfo.push({
-      ip: servidor,
-      status: "ok",
+      ip: listaServidores[index],
+      status: listaServidoresStatus[index],
     });
   }
-
-  console.log(JSON.stringify(serverInfo));
   res.send(JSON.stringify(serverInfo));
 });
 
