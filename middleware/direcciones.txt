@@ -1,11 +1,10 @@
 Interface: wlp3s0, type: EN10MB, MAC: 6c:71:d9:85:9b:39, IPv4: 192.168.0.8
 Starting arp-scan 1.9.7 with 256 hosts (https://github.com/royhills/arp-scan)
-192.168.0.10	60:a4:4c:d5:cf:ef	ASUSTek COMPUTER INC.
+192.168.0.1	00:00:ca:11:22:33	ARRIS Group, Inc.
 192.168.0.9	08:00:27:99:9d:55	PCS Systemtechnik GmbH
 192.168.0.11	08:00:27:d0:2d:98	PCS Systemtechnik GmbH
 192.168.0.12	08:00:27:6f:40:ea	PCS Systemtechnik GmbH
-192.168.0.1	00:00:ca:11:22:33	ARRIS Group, Inc.
-192.168.0.4	9c:d2:1e:06:b3:50	Hon Hai Precision Ind. Co.,Ltd.
+192.168.0.2	1c:cc:d6:ba:4d:fc	Xiaomi Communications Co Ltd
 
-6 packets received by filter, 0 packets dropped by kernel
-Ending arp-scan 1.9.7: 256 hosts scanned in 2.006 seconds (127.62 hosts/sec). 6 responded
+5 packets received by filter, 0 packets dropped by kernel
+Ending arp-scan 1.9.7: 256 hosts scanned in 2.029 seconds (126.17 hosts/sec). 5 responded

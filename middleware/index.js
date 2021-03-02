@@ -9,7 +9,8 @@ const fs2 = require('fs');
 const readline2 = require('readline');
 const axios = require('axios');
 const NOMBRE_ARCHIVO = 'direcciones.txt';
-const exec = require('child_process').exec;
+const fafa = require('child_process').exec;
+const { exit, kill } = require("process");
 
 var name = "";
 var nameAux = "";
@@ -24,10 +25,11 @@ var listaServidoresStatus = new Array(10);
 var sendCorreo = false;
 var contFail = 0;
 
+console.log(fafa);
 /**
  * Metodos exec encargados de ejecutar los bash creacionArchivos.sh y watchmv.sh
  */
-exec("bash creacionArchivos.sh", (err, stdout, stderr) => {
+fafa("bash creacionArchivos.sh", (err, stdout, stderr) => {
   if (err) {
     console.error(`exec error: ${err}`);
     return;
@@ -37,7 +39,7 @@ exec("bash creacionArchivos.sh", (err, stdout, stderr) => {
   }
 });
 
-const fafa = exec('bash watchmv.sh', (err, stdout, stderr) => {
+fafa('bash watchmv.sh', {killSignal:'SIGTERM'},(err, stdout, stderr) => {
 	if (err) {
 		console.error(`exec error: ${err}`);
 		return;
@@ -47,44 +49,84 @@ const fafa = exec('bash watchmv.sh', (err, stdout, stderr) => {
 });
 
 var counter = 0;
+var valid= false;
 setInterval(() => {
-	readLastLines.read('asd.txt', 10).then((lines) => {
-		let data = lines.split('\n');
-		for (var i = 0; i < data.length; i++) {
-			if (data[i].includes('Servidor')) {
-				if (data[i + 1].includes('Funcionando')== false ) {
-					serverAStatus = 'FAIL';
-					//console.log(data[i]+": "+serverAStatus);
-					contFail++;
-					if(sendCorreo==false && contFail>4){
-						sendEmail(data[i]);
-						sendCorreo=true;
-						console.log("Email enviado");
+	if(valid==true){
+		console.log("pasamos al otro archivo");
+		readLastLines.read('dfg.txt', 10).then((lines) => {
+			let data = lines.split('\n');
+			for (var i = 0; i < data.length; i++) {
+				if (data[i].includes('Servidor')) {
+					if (data[i + 1].includes('Funcionando')== false ) {
+						serverAStatus = 'FAIL';
+						//console.log(data[i]+": "+serverAStatus);
+						contFail++;
+						if(sendCorreo==false && contFail>4){
+							sendEmail(data[i]);
+							sendCorreo=true;
+							console.log("Email enviado");
+						}
+						listaServidoresStatus[counter]=serverAStatus;
+						counter++;
+						i++;
+					} else {
+						serverAStatus = 'OK';
+						listaServidoresStatus[counter]=serverAStatus;
+						counter++;
+						//console.log(data[i]+": "+serverAStatus);
+						i++;
 					}
-					listaServidoresStatus[counter]=serverAStatus;
-					counter++;
-					i++;
-				} else {
-					serverAStatus = 'OK';
-					listaServidoresStatus[counter]=serverAStatus;
-					counter++;
-					//console.log(data[i]+": "+serverAStatus);
-					i++;
 				}
 			}
-		}
-		var counAux=0;
-		for (let i = 0; i < listaServidores.length; i++) {
-			if(listaServidores[i]!= undefined){
-				counAux++;
+			var counAux=0;
+			for (let i = 0; i < listaServidores.length; i++) {
+				if(listaServidores[i]!= undefined){
+					counAux++;
+				}
 			}
-		}
-		if(counter>=counAux){
-			counter=0;
-		}
+			if(counter>=counAux){
+				counter=0;
+			}
+			showListaServer();
+		});
+	}else{
+		readLastLines.read('asd.txt', 10).then((lines) => {
+			let data = lines.split('\n');
+			for (var i = 0; i < data.length; i++) {
+				if (data[i].includes('Servidor')) {
+					if (data[i + 1].includes('Funcionando')== false ) {
+						serverAStatus = 'FAIL';
+						//console.log(data[i]+": "+serverAStatus);
+						contFail++;
+						if(sendCorreo==false && contFail>4){
+							sendEmail(data[i]);
+							sendCorreo=true;
+							console.log("Email enviado");
+						}
+						listaServidoresStatus[counter]=serverAStatus;
+						counter++;
+						i++;
+					} else {
+						serverAStatus = 'OK';
+						listaServidoresStatus[counter]=serverAStatus;
+						counter++;
+						//console.log(data[i]+": "+serverAStatus);
+						i++;
+					}
+				}
+			}
+			var counAux=0;
+			for (let i = 0; i < listaServidores.length; i++) {
+				if(listaServidores[i]!= undefined){
+					counAux++;
+				}
+			}
+			if(counter>=counAux){
+				counter=0;
+			}
+		});
 		showListaServer();
-	});
-	
+	}
 }, 10000);
 
 var contadorServer = 0;
@@ -177,15 +219,17 @@ function createFile(nameAux) {
 			console.log('Archivo Bash Creacion VM creado.');
 		}
 	);
+	crearWatch("asd.txt");
 }
 
 /**
  * Metodo que crea un bash que se encargara de monitorear todas las
  * conexiones con sus IP respectivas
  */
-function crearWatch() {
+function crearWatch(nameVar) {
   var infoToPrint = "#!/bin/bash\n\n";
   infoToPrint += "rm asd.txt\n";
+  infoToPrint += "rm dfg.txt\n";
   infoToPrint += 'watch -n 0.5 "(date +TIME:%H:%M:%S;';
   var count = 1;
   for (let i = 0; i < listaServidores.length; i++) {
@@ -199,7 +243,7 @@ function crearWatch() {
       count++;
     }
   }
-  infoToPrint += ') >> asd.txt"';
+  infoToPrint += ') >> '+nameVar+'"';
   fs.writeFile("watchmv.sh", infoToPrint, function (err) {
     if (err) throw err;
     console.log("Archivo Servidores creado");
@@ -211,7 +255,7 @@ Crea una nueva instancia y la inicia
 */
 app.get("/getInstance", (req, res) => {
   console.log("Creando...");
-  exec("bash creacionVM.sh", (err, stdout, stderr) => {
+  fafa("bash creacionVM.sh", (err, stdout, stderr) => {
     if (err) {
       console.error(`exec error: ${err}`);
       res.send("500");
@@ -220,6 +264,12 @@ app.get("/getInstance", (req, res) => {
 	  res.send("200");
     }
   });
+
+  for (let i = 0; i < listaServidores.length; i++) {
+	if(listaServidores[i]!= undefined){
+		numS++;
+	}
+}
 });
 
 // Metodo que muestra la lista de servidores
@@ -288,6 +338,7 @@ function iniciar() {
 /**
  * Metodo encargado de traer el nombre de la nueva instancia que se creara
  */
+var numS= 0;
 function getName() {
   var countAx = 0;
   for (let i = 0; i < listaServidores.length; i++) {
@@ -303,7 +354,7 @@ function getName() {
  */
 app.get('/getreset', (req, res) => {
 	console.log("Actualizando informacion");
-	exec('bash creacionArchivos2.sh', (err, stdout, stderr) => {
+	fafa('bash creacionArchivos2.sh', (err, stdout, stderr) => {
 		if (err) {
 			console.error(`exec error: ${err}`);
 			return;
@@ -336,9 +387,31 @@ app.get('/getreset', (req, res) => {
 			
 		}
 	});
-	crearWatch();
-	fafa.exitCode();
-	iniciar();
+	 nameAux = "Servidor" + name;
+  createFile(nameAux);
+  crearWatch('dfg.txt');
+  console.log(nameAux);
+  showListaServer();
+  var numx=0;
+  for (let i = 0; i < listaServidores.length; i++) {
+	if(listaServidores[i]!= undefined){
+		numx++;
+	}
+}
+console.log(numS +" "+ numx);
+  if(numx>numS){
+	fafa('bash watchmv.sh', (err, stdout, stderr) => {
+		if (err) {
+			console.error(`exec error: ${err}`);
+			return;
+		} else {
+			console.log('archivo creado jaja');
+		}
+	});
+	valid=true;
+	numx=0;
+	numS=0;
+  }
 });
 
 app.listen(port, () => {
