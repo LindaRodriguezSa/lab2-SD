@@ -55,13 +55,12 @@ var valid = false;
 setInterval(() => {
 	if (valid == true) {
 		console.log('pasamos al otro archivo');
-		readLastLines.read('dfg.txt', 10).then((lines) => {
+		readLastLines.read('dfg.txt', 20).then((lines) => {
 			let data = lines.split('\n');
 			for (var i = 0; i < data.length; i++) {
 				if (data[i].includes('Servidor')) {
 					if (data[i + 1].includes('Funcionando') == false) {
 						serverAStatus = 'FAIL';
-						//console.log(data[i]+": "+serverAStatus);
 						contFail++;
 						if (sendCorreo == false && contFail > 4) {
 							sendEmail(data[i]);
@@ -75,7 +74,6 @@ setInterval(() => {
 						serverAStatus = 'OK';
 						listaServidoresStatus[counter] = serverAStatus;
 						counter++;
-						//console.log(data[i]+": "+serverAStatus);
 						i++;
 					}
 				}
@@ -92,13 +90,12 @@ setInterval(() => {
 			showListaServer();
 		});
 	} else {
-		readLastLines.read('asd.txt', 10).then((lines) => {
+		readLastLines.read('asd.txt', 20).then((lines) => {
 			let data = lines.split('\n');
 			for (var i = 0; i < data.length; i++) {
 				if (data[i].includes('Servidor')) {
 					if (data[i + 1].includes('Funcionando') == false) {
 						serverAStatus = 'FAIL';
-						//console.log(data[i]+": "+serverAStatus);
 						contFail++;
 						if (sendCorreo == false && contFail > 4) {
 							sendEmail(data[i]);
@@ -112,7 +109,6 @@ setInterval(() => {
 						serverAStatus = 'OK';
 						listaServidoresStatus[counter] = serverAStatus;
 						counter++;
-						//console.log(data[i]+": "+serverAStatus);
 						i++;
 					}
 				}
@@ -123,13 +119,13 @@ setInterval(() => {
 					counAux++;
 				}
 			}
-			if (counter >= counAux) {
+			if (counter > counAux) {
 				counter = 0;
 			}
 		});
 		showListaServer();
 	}
-}, 10000);
+}, 5000);
 
 var contadorServer = 0;
 
@@ -301,24 +297,23 @@ app.post('/getquote', (req, res) => {
 	const numServer = getInfo();
 
 	let base64Image = req.body;
-
 	axios
 		.post(`http://${listaServidores[numServer]}:3000/getQuote`, base64Image)
 		.then((response) => {
 			res.send(response.data);
 		})
-		.catch((error) => console.log(error));
-
-	res.send('quitar');
+		.catch((error) => console.log("error en getQuote"));
 });
 
 app.get('/getserverinformation', (req, res) => {
 	let serverInfo = [];
 	for (let index = 0; index < listaServidores.length; index++) {
-		serverInfo.push({
+		if(listaServidores[index]!= undefined){
+			serverInfo.push({
 			ip: listaServidores[index],
-			status: listaServidoresStatus[index],
-		});
+				status: listaServidoresStatus[index],
+			});	
+		}
 	}
 	res.send(JSON.stringify(serverInfo));
 });

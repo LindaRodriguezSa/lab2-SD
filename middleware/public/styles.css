@@ -8,13 +8,12 @@ body {
 }
 
 .btn_email {
-    background: rgb(202, 60, 60);
+    background: rgb(224, 153, 46);
     background-position: left;
     border: 3px solid #e92910;
 }
 
 .btn_email:before {
-    background: url("email.png") no-repeat scroll center center / 90% auto rgba(0, 0, 0, 0);
     content: "";
     display: inline-block;
     height: 16px;

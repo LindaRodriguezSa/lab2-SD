@@ -7,4 +7,4 @@ Starting arp-scan 1.9.7 with 256 hosts (https://github.com/royhills/arp-scan)
 192.168.0.7	48:2c:a0:9d:59:5b	Xiaomi Communications Co Ltd
 
 5 packets received by filter, 0 packets dropped by kernel
-Ending arp-scan 1.9.7: 256 hosts scanned in 2.033 seconds (125.92 hosts/sec). 5 responded
+Ending arp-scan 1.9.7: 256 hosts scanned in 2.005 seconds (127.68 hosts/sec). 5 responded
