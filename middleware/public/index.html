@@ -35,13 +35,14 @@
     <div id="buttons">
         <button id="btn-frase" class="btn_frase" v-on:click="frase"> Cambiar imagen y frase </button>
         <button id="btn-instance" class="btn_instancia" v-on:click="instancia">Nueva Instancia</button>
+        <button id="btn-actualizar" class="btn_email" v-on:click="actualizar">Actualizar Info</button>
     </div>
 
     <!--monitoreo -->
     <div class="contenedorMonitoreo">
 
         <label for="inputNumero" class="labelmoni">Monitoreo</label>
-        <button class="btn-abrir-formulario" id="btn-abrir-table">
+        <button class="btn-abrir-formulario" id="btn-abrir-table" v-on:click="actualizar">
             <i class="fas fa-plus"></i>
         </button>
 

@@ -97,6 +97,11 @@ function actualizarInfo() {
 		.then((response) => response.text())
 		.catch((error) => console.log(error));
 	alert('Informacion Actualizada');
+	
+	fetch('/getserverinformation')
+		.then((response) => response.json())
+		.then((obj) => (servidores.serversList = obj))
+		.catch((error) => console.log(error));
 }
 
 function getserverinfo() {
