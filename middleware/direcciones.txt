@@ -4,7 +4,7 @@ Starting arp-scan 1.9.7 with 256 hosts (https://github.com/royhills/arp-scan)
 192.168.0.9	08:00:27:99:9d:55	PCS Systemtechnik GmbH
 192.168.0.11	08:00:27:d0:2d:98	PCS Systemtechnik GmbH
 192.168.0.12	08:00:27:6f:40:ea	PCS Systemtechnik GmbH
-192.168.0.2	1c:cc:d6:ba:4d:fc	Xiaomi Communications Co Ltd
+192.168.0.7	48:2c:a0:9d:59:5b	Xiaomi Communications Co Ltd
 
 5 packets received by filter, 0 packets dropped by kernel
-Ending arp-scan 1.9.7: 256 hosts scanned in 2.029 seconds (126.17 hosts/sec). 5 responded
+Ending arp-scan 1.9.7: 256 hosts scanned in 2.033 seconds (125.92 hosts/sec). 5 responded

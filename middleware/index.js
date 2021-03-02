@@ -147,6 +147,7 @@ function getInfo() {
   }
   if (fin) {
     contadorServer = 0;
+	asd=0;
   }
   return asd;
 }
