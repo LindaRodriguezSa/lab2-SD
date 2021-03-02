@@ -29,7 +29,7 @@
     </div>
 
     <div>
-        <label for="inputNombre">Nombre</label>
+        <label for="inputNombre" class="labelurl">Url Imagen</label>
         <input type="url" id="image-url" autocomplete="on" placeholder="Link directo a la imagen que quieres :D">
     </div>
     <div id="buttons">
@@ -38,8 +38,38 @@
         <button class="btn_email" v-on:click="actualizar">Actualizar info</button>
     </div>
 
-    <!-- CDNs dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!--monitoreo -->
+    <div class="contenedorMonitoreo">
+
+        <label for="inputNumero" class="labelmoni">Monitoreo</label>
+        <button class="btn-abrir-formulario" id="btn-abrir-table">
+            <i class="fas fa-plus"></i>
+        </button>
+
+        <!-- targeta monitoreo -->
+        <div action="" id="tarjeta" class="tarjeta">
+            <h1 class="titulo">Estado de los servidores</h1>
+
+            <table id="servidoresinfo">
+                <tr>
+                    <th scope="col">Name server</th>
+                    <th scope="col">IP</th>
+                    <th scope="col">Status</th>
+                </tr>
+
+                <tr v-for="server,index in serversList">
+                    <td>Servidor # : {{index+1}} </td>
+                    <td>{{server.ip}}</td>
+                    <td>{{server.status}}</td>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+    <script src=" https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js">
+    </script>
+    <script src="https://kit.fontawesome.com/2c36e9b7b1.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="communication.js"></script>
 </body>
