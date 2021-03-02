@@ -67,7 +67,7 @@ async function changeQuote() {
 }
 
 function createInstance() {
-	fetch('/getInstance');
+	// fetch('/getInstance');
 
 	imagecomponent.images.push({
 		id: imagecomponent.images.length,
@@ -80,6 +80,8 @@ function createInstance() {
 		document.querySelector('#btn-frase').classList.remove('btn-frase-disabled');
 		document.querySelector('#btn-frase').classList.add('btn_frase');
 	}
+
+	temporarilyDisableButtons(60000);
 
 	alert('Creando instancia ...');
 }
@@ -171,6 +173,10 @@ btnAbrirTable.addEventListener('click', () => {
 	tablaMonitoreo.classList.toggle('active');
 });
 
+/**
+ * Transforma una imagen a base64
+ * @param { HTMLElement } img
+ */
 function imageToBase64(img) {
 	var canvas, ctx, dataURL, base64;
 	canvas = document.createElement('canvas');
@@ -181,4 +187,20 @@ function imageToBase64(img) {
 	dataURL = canvas.toDataURL('image/png');
 	base64 = dataURL.replace(/^data:image\/png;base64,/, '');
 	return base64;
+}
+
+function temporarilyDisableButtons(time) {
+	document.querySelector('#btn-frase').classList.remove('btn_frase');
+	document.querySelector('#btn-frase').classList.add('btn-frase-disabled');
+
+	document.querySelector('#btn-instance').classList.remove('btn_instancia');
+	document.querySelector('#btn-instance').classList.add('btn-frase-disabled');
+
+	setTimeout(() => {
+		document.querySelector('#btn-frase').classList.remove('btn-frase-disabled');
+		document.querySelector('#btn-frase').classList.add('btn_frase');
+
+		document.querySelector('#btn-instance').classList.remove('btn-frase-disabled');
+		document.querySelector('#btn-instance').classList.add('btn_instancia');
+	}, time);
 }
