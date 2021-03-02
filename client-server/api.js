@@ -18,12 +18,6 @@ app.get('/', (req, res) => {
 });
 
 app.post('/getQuote', (req, res) => {
-	console.log('Request: ');
-	console.log(req);
-	let aux = req.data;
-	let base64Image = aux.replace(/^data:image\/png;base64,/, '');
-	fs.writeFile('img.jpg', base64Image, 'base64', (err) => console.log('Error al base 64 image'));
-
 	console.log('Frase solicitada');
 	res.send(quotes.getRandomQuote());
 });
