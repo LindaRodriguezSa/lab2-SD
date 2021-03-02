@@ -12,7 +12,10 @@ const NOMBRE_ARCHIVO = 'direcciones.txt';
 const fafa = require('child_process').exec;
 const { exit, kill } = require('process');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
+
 app.use(bodyParser.text({ limit: '50mb' }));
+app.use(morgan('tiny'));
 
 var name = '';
 var nameAux = '';
