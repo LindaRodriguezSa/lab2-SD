@@ -4,8 +4,10 @@ const app = express();
 const port = 3000;
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const morgan = require('morgan');
 
 app.use(bodyParser.text({ limit: '60mb' }));
+app.use(morgan('tiny'));
 
 app.use(function (req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');
