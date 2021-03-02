@@ -19,8 +19,8 @@ var buttonsa = new Vue({
 		instancia: () => {
 			createInstance();
 		},
-		email: () => {
-			sendEmail();
+		actualizar: () => {
+			actualizarInfo();
 		},
 	},
 });
@@ -67,7 +67,13 @@ async function changeQuote() {
 }
 
 function createInstance() {
-	// fetch('/getInstance');
+	fetch('/getInstance')
+		.then((response) => {
+			if (response.text == '200') {
+				alert('Maquina creadda');
+			}
+		})
+		.catch((error) => console.log(error));
 
 	imagecomponent.images.push({
 		id: imagecomponent.images.length,
@@ -86,8 +92,11 @@ function createInstance() {
 	alert('Creando instancia ...');
 }
 
-function sendEmail() {
-	fetch('/email');
+function actualizarInfo() {
+	fetch('/getreset')
+		.then((response) => response.text())
+		.catch((error) => console.log(error));
+	alert('Informacion Actualizada');
 }
 
 function getserverinfo() {
@@ -189,6 +198,11 @@ function imageToBase64(img) {
 	return base64;
 }
 
+/**
+ * Desactiva temporalmente los botones, cuando se crea una nueva instancia
+ * con el tiempo especificado
+ * @param { Int } time
+ */
 function temporarilyDisableButtons(time) {
 	document.querySelector('#btn-frase').classList.remove('btn_frase');
 	document.querySelector('#btn-frase').classList.add('btn-frase-disabled');

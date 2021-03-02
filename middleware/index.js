@@ -5,9 +5,12 @@ const nodemailer = require('nodemailer');
 const readLastLines = require('read-last-lines');
 const fs = require('fs');
 const readline = require('readline');
+const fs2 = require('fs');
+const readline2 = require('readline');
 const axios = require('axios');
 const NOMBRE_ARCHIVO = 'direcciones.txt';
-const exec = require('child_process').exec;
+const fafa = require('child_process').exec;
+const { exit, kill } = require('process');
 const bodyParser = require('body-parser');
 app.use(bodyParser.text({ limit: '50mb' }));
 
@@ -24,10 +27,11 @@ var listaServidoresStatus = new Array(10);
 var sendCorreo = false;
 var contFail = 0;
 
+console.log(fafa);
 /**
  * Metodos exec encargados de ejecutar los bash creacionArchivos.sh y watchmv.sh
  */
-exec('bash creacionArchivos.sh', (err, stdout, stderr) => {
+fafa('bash creacionArchivos.sh', (err, stdout, stderr) => {
 	if (err) {
 		console.error(`exec error: ${err}`);
 		return;
@@ -37,7 +41,7 @@ exec('bash creacionArchivos.sh', (err, stdout, stderr) => {
 	}
 });
 
-exec('bash watchmv.sh', (err, stdout, stderr) => {
+fafa('bash watchmv.sh', { killSignal: 'SIGTERM' }, (err, stdout, stderr) => {
 	if (err) {
 		console.error(`exec error: ${err}`);
 		return;
@@ -47,45 +51,85 @@ exec('bash watchmv.sh', (err, stdout, stderr) => {
 });
 
 var counter = 0;
+var valid = false;
 setInterval(() => {
-	readLastLines.read('asd.txt', 20).then((lines) => {
-		let data = lines.split('\n');
-		for (var i = 0; i < data.length; i++) {
-			if (data[i].includes('Servidor')) {
-				if (data[i + 1].includes('Funcionando') == false) {
-					serverAStatus = 'FAIL';
-					//console.log(data[i]+": "+serverAStatus);
-					contFail++;
-					if (sendCorreo == false && contFail > 4) {
-						sendEmail(data[i]);
-						sendCorreo = true;
-						console.log('Email enviado');
+	if (valid == true) {
+		console.log('pasamos al otro archivo');
+		readLastLines.read('dfg.txt', 10).then((lines) => {
+			let data = lines.split('\n');
+			for (var i = 0; i < data.length; i++) {
+				if (data[i].includes('Servidor')) {
+					if (data[i + 1].includes('Funcionando') == false) {
+						serverAStatus = 'FAIL';
+						//console.log(data[i]+": "+serverAStatus);
+						contFail++;
+						if (sendCorreo == false && contFail > 4) {
+							sendEmail(data[i]);
+							sendCorreo = true;
+							console.log('Email enviado');
+						}
+						listaServidoresStatus[counter] = serverAStatus;
+						counter++;
+						i++;
+					} else {
+						serverAStatus = 'OK';
+						listaServidoresStatus[counter] = serverAStatus;
+						counter++;
+						//console.log(data[i]+": "+serverAStatus);
+						i++;
 					}
-					listaServidoresStatus[counter] = serverAStatus;
-					counter++;
-					i++;
-				} else {
-					serverAStatus = 'OK';
-					cinst;
-					listaServidoresStatus[counter] = serverAStatus;
-					counter++;
-					//console.log(data[i]+": "+serverAStatus);
-					i++;
 				}
 			}
-		}
-		var counAux = 0;
-		for (let i = 0; i < listaServidores.length; i++) {
-			if (listaServidores[i] != undefined) {
-				counAux++;
+			var counAux = 0;
+			for (let i = 0; i < listaServidores.length; i++) {
+				if (listaServidores[i] != undefined) {
+					counAux++;
+				}
 			}
-		}
-		if (counter >= counAux) {
-			counter = 0;
-		}
+			if (counter >= counAux) {
+				counter = 0;
+			}
+			showListaServer();
+		});
+	} else {
+		readLastLines.read('asd.txt', 10).then((lines) => {
+			let data = lines.split('\n');
+			for (var i = 0; i < data.length; i++) {
+				if (data[i].includes('Servidor')) {
+					if (data[i + 1].includes('Funcionando') == false) {
+						serverAStatus = 'FAIL';
+						//console.log(data[i]+": "+serverAStatus);
+						contFail++;
+						if (sendCorreo == false && contFail > 4) {
+							sendEmail(data[i]);
+							sendCorreo = true;
+							console.log('Email enviado');
+						}
+						listaServidoresStatus[counter] = serverAStatus;
+						counter++;
+						i++;
+					} else {
+						serverAStatus = 'OK';
+						listaServidoresStatus[counter] = serverAStatus;
+						counter++;
+						//console.log(data[i]+": "+serverAStatus);
+						i++;
+					}
+				}
+			}
+			var counAux = 0;
+			for (let i = 0; i < listaServidores.length; i++) {
+				if (listaServidores[i] != undefined) {
+					counAux++;
+				}
+			}
+			if (counter >= counAux) {
+				counter = 0;
+			}
+		});
 		showListaServer();
-	});
-}, 5000);
+	}
+}, 10000);
 
 var contadorServer = 0;
 
@@ -174,16 +218,17 @@ function createFile(nameAux) {
 			console.log('Archivo Bash Creacion VM creado.');
 		}
 	);
-	crearWatch();
+	crearWatch('asd.txt');
 }
 
 /**
  * Metodo que crea un bash que se encargara de monitorear todas las
  * conexiones con sus IP respectivas
  */
-function crearWatch() {
+function crearWatch(nameVar) {
 	var infoToPrint = '#!/bin/bash\n\n';
 	infoToPrint += 'rm asd.txt\n';
+	infoToPrint += 'rm dfg.txt\n';
 	infoToPrint += 'watch -n 0.5 "(date +TIME:%H:%M:%S;';
 	var count = 1;
 	for (let i = 0; i < listaServidores.length; i++) {
@@ -192,7 +237,7 @@ function crearWatch() {
 			count++;
 		}
 	}
-	infoToPrint += ') >> asd.txt"';
+	infoToPrint += ') >> ' + nameVar + '"';
 	fs.writeFile('watchmv.sh', infoToPrint, function (err) {
 		if (err) throw err;
 		console.log('Archivo Servidores creado');
@@ -204,18 +249,21 @@ Crea una nueva instancia y la inicia
 */
 app.get('/getInstance', (req, res) => {
 	console.log('Creando...');
-	exec('bash creacionVM.sh', (err, stdout, stderr) => {
-		getInfo();
+	fafa('bash creacionVM.sh', (err, stdout, stderr) => {
 		if (err) {
 			console.error(`exec error: ${err}`);
-			res.sendStatus(500);
+			res.send('500');
 		} else {
-			iniciar();
 			console.log('logrado Maquina creada');
-			res.sendStatus(200);
-			alert('Maquina creada');
+			res.send('200');
 		}
 	});
+
+	for (let i = 0; i < listaServidores.length; i++) {
+		if (listaServidores[i] != undefined) {
+			numS++;
+		}
+	}
 });
 
 // Metodo que muestra la lista de servidores
@@ -236,18 +284,14 @@ let lector = readline.createInterface({
 	input: fs.createReadStream(NOMBRE_ARCHIVO),
 });
 
-lector.on(
-	'line',
-	(linea) => {
-		if (linea.includes('08:00:27')) {
-			asd = linea.slice(0, -41);
-			listaServidores[contador] = asd;
-			contador++;
-		}
-		contador == 0;
-	},
-	5000
-);
+lector.on('line', (linea) => {
+	if (linea.includes('08:00:27')) {
+		asd = linea.slice(0, -41);
+		listaServidores[contador] = asd;
+		contador++;
+	}
+	contador == 0;
+});
 
 /**
  * Realiza una petición @get a el servidor correspondiente, dado por balanceo de carga
@@ -292,6 +336,7 @@ function iniciar() {
 /**
  * Metodo encargado de traer el nombre de la nueva instancia que se creara
  */
+var numS = 0;
 function getName() {
 	var countAx = 0;
 	for (let i = 0; i < listaServidores.length; i++) {
@@ -301,6 +346,69 @@ function getName() {
 	}
 	name = countAx + 1;
 }
+
+/**
+ * Reinicia todos lo ssubprocesos para actualizar la nueva instancia
+ */
+app.get('/getreset', (req, res) => {
+	console.log('Actualizando informacion');
+	fafa('bash creacionArchivos2.sh', (err, stdout, stderr) => {
+		if (err) {
+			console.error(`exec error: ${err}`);
+			return;
+		} else {
+			console.log('Archivo creado');
+			res.send('200');
+		}
+	});
+	let lector2 = readline2.createInterface({
+		input: fs2.createReadStream('direcciones2.txt'),
+	});
+	var pos = 0;
+	//falta agregar bien a la lsita, omitir los que ya estan
+	lector2.on('line', (linea) => {
+		if (linea.includes('08:00:27')) {
+			asd = linea.slice(0, -41);
+			for (let i = 0; i < listaServidores.length; i++) {
+				if (listaServidores[i] != undefined) {
+					if (listaServidores[i].includes(asd)) {
+						pos++;
+						break;
+					} else {
+						listaServidores[pos] = asd;
+						pos++;
+						break;
+					}
+				}
+			}
+		}
+	});
+	nameAux = 'Servidor' + name;
+	createFile(nameAux);
+	crearWatch('dfg.txt');
+	console.log(nameAux);
+	showListaServer();
+	var numx = 0;
+	for (let i = 0; i < listaServidores.length; i++) {
+		if (listaServidores[i] != undefined) {
+			numx++;
+		}
+	}
+	console.log(numS + ' ' + numx);
+	if (numx > numS) {
+		fafa('bash watchmv.sh', (err, stdout, stderr) => {
+			if (err) {
+				console.error(`exec error: ${err}`);
+				return;
+			} else {
+				console.log('archivo creado jaja');
+			}
+		});
+		valid = true;
+		numx = 0;
+		numS = 0;
+	}
+});
 
 app.listen(port, () => {
 	console.log(`Server One, listening at port: ${port}`);
